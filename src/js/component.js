@@ -12,6 +12,27 @@ export class Component {
     
   }
 
+  /**
+   * Initializes a basic HTML skeleton for the web page, generating a header,
+   * main, and sticky footer. 
+   * 
+   * @param {*} headerTitle - What the web page is called. 
+   * @returns - An array containing references to the generated header, main, and footer.
+   */
+  initializeStructure(headerTitle) {
+    const body = document.body;
+    const mainWrapper = this.div("content");
+    const header = this.header("To-Do List");
+    const main = document.createElement("main");
+    const footer = this.footer();
+    main.classList.add("main");
+
+    mainWrapper.append(header, main);
+    body.append(mainWrapper, footer);
+
+    return [header, main, footer];
+  }
+
   content() {
     let content = document.createElement("div");
     content.classList.add("content");
@@ -34,23 +55,20 @@ export class Component {
 
     this.mql.addEventListener("change", (e) => {
       if (e.matches) {
-        menuButton.classList.remove("no-display");
+        document.querySelector("#menu-button").classList.remove("no-display");
       } else {
         // it bigger than the query rule.
-        menuButton.classList.add("no-display");
+        document.querySelector("#menu-button").classList.add("no-display");
         document.querySelector("#navbar").classList.remove("slide-in-out");
       }
     });
 
-    //// TODO: Come back later and figure out why this isn't working.
-    // Webpack and not instantiated in memory?
-    // Because it also doesn't work in the OnLoad() function.
-    // SOL: > The problem is that the element is recreated by font awesome,
-    // it turns from an i to an svg.
-    menuButton.addEventListener("click", (e) => {
-      console.log("menu pressed.");
-      document.querySelector("#navbar").classList.toggle("slide-in-out");
-    });
+    window.addEventListener('load', function () {
+      document.querySelector("#menu-button").addEventListener("click", (e) => {
+        console.log("menu pressed.");
+        document.querySelector("#navbar").classList.toggle("slide-in-out");
+      });
+    })
     
     header.id = "header";
     // header.style.background = `url(${img})`;
