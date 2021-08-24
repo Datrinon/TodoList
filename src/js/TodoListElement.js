@@ -52,22 +52,40 @@ export class TodoListElement {
     }
 
     let okButton = c.button("Create Task");
+    okButton.id = "add-task-submit";
     let cancelButton = c.button("Cancel");
+    cancelButton.id = "add-task-cancel";
     
-    okButton.setAttribute("type", "submit");
+    okButton.setAttribute("type", "button");
     okButton.setAttribute("disabled", "");
     okButton.setAttribute("autocomplete", "off");
     
     cancelButton.setAttribute("type", "button");
     cancelButton.addEventListener("click", () => {
-      console.log("Ayo");
-      document.querySelector("#add-task-form").remove();
+      TodoListElement.closeForm();
+    });
+
+    // add event listeners here for title
+    titleField[1].addEventListener("input", (e) => {
+      if (e.currentTarget.value !== "") {
+        document.querySelector("#add-task-submit").removeAttribute("disabled");
+      } else {
+        document.querySelector("#add-task-submit").setAttribute("disabled", "");
+      }
     });
 
     form.append(okButton, cancelButton);
+
+    okButton.addEventListener("click", (e) => {
+      console.log("ayo");
+    });
     
     return form;
+  }
 
+
+  static closeForm() {
+    document.querySelector("#add-task-form").remove();
   }
 }
 
@@ -78,6 +96,8 @@ export class TodoListElement {
 //   b. Use the components library to generate an input and label.
 //   c. return a form from addTaskForm
 2. Work on the C(reate) part of the app.
+I fill... out the form. When the form is filled out... 
+
 
 
 To be done:
