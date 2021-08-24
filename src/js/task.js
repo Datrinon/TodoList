@@ -9,7 +9,7 @@ export class Task {
   categories;
   
   constructor() {
-    this.createDate = new Date();
+    this.createDate = Date.now();
     this.title = "";
     this.priority = priority;
     this.description = "";

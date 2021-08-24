@@ -1,3 +1,4 @@
+import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 import {Component} from "./component.js";
 import {Task} from "./task.js";
 import priority from "./priority.js";
@@ -16,11 +17,13 @@ export class TodoListElement {
    */
   static addTaskButton(){
     const addTask = c.button("");
+    addTask.id = "display-ask-form-button";
     addTask.append(c.faIcon("fas", "fa-plus"));
     addTask.append(c.span("Click here to add task..."));
 
     addTask.addEventListener("click", (e) => {
       e.currentTarget.parentNode.append(TodoListElement.addTaskForm());
+      addTask.classList.add("no-display");
     });
 
     return addTask;
@@ -76,16 +79,45 @@ export class TodoListElement {
 
     form.append(okButton, cancelButton);
 
-    okButton.addEventListener("click", (e) => {
-      console.log("ayo");
-    });
+    okButton.addEventListener("click", TodoListElement.addTask);
     
     return form;
+  }
+
+  static addTask() {
+    let task = TodoListElement._parseFormFields();
+
+    TodoListElement.addTaskToView(task, ".main");
+  }
+
+  static _parseFormFields() {
+    let task = new Task();
+    task.title = document.querySelector("#task-title").value;
+    task.priority = document.querySelector("#task-priority").value;
+    task.description = document.querySelector("#task-description").value;
+    // TODO change this thing later right here because it's going to be like 
+    // a tag implementation instead of just a simple text field.
+    task.categories = document.querySelector("#task-categories").value;
+
+    return task;
   }
 
 
   static closeForm() {
     document.querySelector("#add-task-form").remove();
+    document.querySelector("#display-ask-form-button").classList.remove("no-display");
+  }
+
+  static addTaskToView(task, parent) {
+    let taskView = c.div("task");
+    let header = c.heading(task.title, "task-view-title");
+    let date = c.paragraph(task.date); //c.paragraph(format(task.date, "MM/dd/yyyy"));
+    let priority = c.paragraph(task.priority, "task-view-title");
+    let description = c.paragraph(task.description, "task-view-description");
+
+    taskView.append(header, priority, description, date);
+
+    document.querySelector(parent).append(taskView);
   }
 }
 
@@ -96,7 +128,8 @@ export class TodoListElement {
 //   b. Use the components library to generate an input and label.
 //   c. return a form from addTaskForm
 2. Work on the C(reate) part of the app.
-I fill... out the form. When the form is filled out... 
+I fill... out the form. The form sends data someway. Let's see if we can do it
+without query selectors.
 
 
 

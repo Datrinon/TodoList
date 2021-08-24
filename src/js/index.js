@@ -33,9 +33,9 @@ const c = new Component();
   const navbar = c.navbar("Good Evening!");
   header.append(navbar);
 
-  // return the header, main, and footer for editing.
-
   const addTask = TodoListElement.addTaskButton();
 
   main.append(addTask);
+
+  
 })();
