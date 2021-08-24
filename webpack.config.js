@@ -9,7 +9,8 @@ module.exports = {
   entry: {
     index: './src/js/index.js',
     component: './src/js/component.js',
-    task: './src/js/task.js'
+    task: './src/js/task.js',
+    priority: "./src/js/priority.js"
   },
   devtool: 'inline-source-map',
   devServer: {

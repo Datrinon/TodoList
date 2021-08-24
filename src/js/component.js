@@ -266,8 +266,70 @@ export class Component {
 
   faIcon(category, name, ...className){
     let fasIcon = document.createElement("i");
-    fasIcon.classList.add(category, name, className);
+    fasIcon.classList.add(category, name);
+    if (className !== null) {
+      fasIcon.classList.add(...className);
+    }
 
     return fasIcon;
+  }
+
+  span(textContent = null, ...className) {
+    let span = document.createElement("span");
+    if (span !== null) {
+      span.classList.add(...className);
+    }
+    span.textContent = textContent;
+
+    return span;
+  }
+
+  formInput(labelText, type, inputId, name) {
+    let label = document.createElement("label");
+    label.setAttribute("for", inputId);
+    label.textContent = labelText;
+
+    let input = document.createElement("input");
+    input.id = inputId;
+    input.name = name;
+    input.type = type;
+
+    return [label, input];
+  }
+
+  dropdown(labelText, name, inputId, ...values) {
+    let label = document.createElement("label");
+    label.setAttribute("for", inputId);
+    label.textContent = labelText;
+
+    let select = document.createElement("select");
+    select.setAttribute("name", name);
+    select.setAttribute("id", inputId);
+
+    for (let val of values) {
+      let entry = document.createElement("option");
+      entry.value = val;
+      if (isNaN(val) && (typeof val === "string")) {
+        entry.textContent = val[0].toUpperCase() + val.slice(1);
+      } else {
+        entry.textContent = val;
+      }
+
+      select.append(entry);
+    }
+
+    return [label, select];
+  }
+
+  textArea(labelText, name, inputId) {
+    let label = document.createElement("label");
+    label.setAttribute("for", inputId);
+    label.textContent = labelText;
+
+    let ta = document.createElement("textarea");
+    ta.id = inputId;
+    ta.setAttribute("name", name);
+
+    return [label, ta];
   }
 }
