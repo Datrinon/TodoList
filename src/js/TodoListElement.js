@@ -19,6 +19,10 @@ export class TodoListElement {
     addTask.append(c.faIcon("fas", "fa-plus"));
     addTask.append(c.span("Click here to add task..."));
 
+    addTask.addEventListener("click", (e) => {
+      e.currentTarget.parentNode.append(TodoListElement.addTaskForm());
+    });
+
     return addTask;
   }
 
@@ -32,7 +36,8 @@ export class TodoListElement {
     const form = document.createElement("form");
     form.id = "add-task-form";
 
-    let p = priority;
+    let p = priority; // calling priority by itself was undefined earlier. 
+    // Maybe something to do with export behavior and lexical environment?
 
     let titleField = c.formInput("Title", "text", "task-title", "title");
     let priorityField = c.dropdown("Priority", "priority", "task-priority", ...Object.keys(p));
@@ -45,6 +50,21 @@ export class TodoListElement {
       // add label and the input element of each field.
       form.append(field[0], field[1]);
     }
+
+    let okButton = c.button("Create Task");
+    let cancelButton = c.button("Cancel");
+    
+    okButton.setAttribute("type", "submit");
+    okButton.setAttribute("disabled", "");
+    okButton.setAttribute("autocomplete", "off");
+    
+    cancelButton.setAttribute("type", "button");
+    cancelButton.addEventListener("click", () => {
+      console.log("Ayo");
+      document.querySelector("#add-task-form").remove();
+    });
+
+    form.append(okButton, cancelButton);
     
     return form;
 
@@ -53,14 +73,15 @@ export class TodoListElement {
 
 // TODO LIST
 /*
-1. Build the add form for the note list.
-  a. Use the enumerable properties to determine the type of input to be added.
-  b. Use the components library to generate an input and label.
-  c. return a form from addTaskForm
+// 1. Build the add form for the note list.
+//   a. Use the enumerable properties to determine the type of input to be added.
+//   b. Use the components library to generate an input and label.
+//   c. return a form from addTaskForm
 2. Work on the C(reate) part of the app.
+
 
 To be done:
 - Local storage save
 - Modify and Update
-- UI shit
+- UI s
 */

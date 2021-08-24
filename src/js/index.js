@@ -35,11 +35,7 @@ const c = new Component();
 
   // return the header, main, and footer for editing.
 
-  const addTask = c.button("");
-  addTask.append(c.faIcon("fas", "fa-plus"));
-  addTask.append(c.span("Click here to add task..."));
+  const addTask = TodoListElement.addTaskButton();
 
-  const addForm = TodoListElement.addTaskForm();
-
-  main.append(addTask, addForm);
+  main.append(addTask);
 })();
