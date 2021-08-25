@@ -38,8 +38,14 @@ class TaskListConnection {
     }
   }
 
-  get() {
+  getAllItems() {
     return this.#storage;
+  }
+
+  getItemById(index) {
+    let item = this.#storage.find(elem => elem.id === index);
+
+    return item;
   }
 
   update(item) {

@@ -2,7 +2,7 @@ import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 import {Component} from "./component.js";
 import {Task} from "./task.js";
 import priority from "./priority.js";
-import connection from "./component.js";
+import connection from "./TodoListConnection.js";
 const c = new Component();
 
 /**
@@ -10,6 +10,8 @@ const c = new Component();
  * Such GUI elements have their functionalities incorporated here.
  */
 export class TodoListElement {
+
+  static connection = connection;
   constructor() {
 
   }
@@ -98,6 +100,8 @@ export class TodoListElement {
         });
 
     TodoListElement.addTaskToView(task, "#notes");
+    
+    TodoListElement.connection.add(task);
   }
 
   static _parseFormFields() {
@@ -135,14 +139,21 @@ export class TodoListElement {
   }
 
   static _completeTask(e) {
+    let taskView = e.currentTarget.parentNode;
+    let id = +taskView.id.split("task-")[1];
 
-    // Remove the task from view
     // Mark the task as completed
+    let task = TodoListElement.connection.getItemById(id);
+    task.completed = true;
     // update the storage array.
-    // Add the task to the completed view.
+    TodoListElement.connection.update(task);
     
+    // Remove the task from view
+    taskView.remove();
+    
+    // Add the task to the completed view.
+    // TODO Add a completed section.
 
-    //e.currentTarget.parentNode. 
   }
 }
 

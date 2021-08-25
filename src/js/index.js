@@ -22,7 +22,7 @@ const c = new Component();
  * Called upon load. Initializes general GUI elements, like the header,
  * navbar, controls, etc.
  */
-(function main() {
+(function loadGUI() {
 
 
   const [header, main, footer] = [...c.initializeStructure("To-Do List")];
