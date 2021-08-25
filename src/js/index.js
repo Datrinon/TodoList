@@ -25,21 +25,26 @@ const c = new Component();
  */
 (function loadGUI() {
 
-
   const [header, main, footer] = [...c.initializeStructure("To-Do List")];
   const navbar = c.navbar("Good Evening!");
   header.append(navbar);
 
-  const taskList = c.section("notes");
+  const activeTaskList = c.section("tasks-active");
+  const completedTasksList = c.section("tasks-completed");
   const addTask = TodoListElement.addTaskButton();
 
-  main.append(taskList, addTask);
+  let activeLabel = c.heading("Active", 2, "task-section-header");
+  let completedLabel = c.heading("Completed", 2, "task-section-header");
+  activeTaskList.append(activeLabel);
+  completedTasksList.append(completedLabel);
+
+  main.append(activeTaskList, addTask, completedTasksList);
 
   let initialTasks = connection.getAllItems();
 
   if (initialTasks !== null) {
     for (let item of initialTasks) {
-      TodoListElement.addTaskToView(item, "#notes");
+      TodoListElement.addTaskToView(item, "#tasks-active");
     }
   }
 

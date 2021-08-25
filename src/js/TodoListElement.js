@@ -99,7 +99,7 @@ export class TodoListElement {
           input.value = "";
         });
 
-    TodoListElement.addTaskToView(task, "#notes");
+    TodoListElement.addTaskToView(task, "#tasks-active");
     
     TodoListElement.connection.add(task);
   }
@@ -133,9 +133,15 @@ export class TodoListElement {
     let description = c.paragraph(task.description, "task-view-description");
     let finishButton = c.button("Complete", "task-view-finish-button");
 
-    taskView.append(header, priority, description, createDate, dueDate, finishButton);
+    finishButton.addEventListener("click", TodoListElement._completeTask);
 
-    document.querySelector(parentSelector).append(taskView);
+    taskView.append(header, priority, description, createDate, dueDate);
+    if (task.completed) {
+      document.querySelector("#tasks-completed").append(taskView);
+    } else {
+      taskView.append(finishButton);
+      document.querySelector(parentSelector).append(taskView);
+    }
   }
 
   static _completeTask(e) {
@@ -148,12 +154,17 @@ export class TodoListElement {
     // update the storage array.
     TodoListElement.connection.update(task);
     
-    // Remove the task from view
-    taskView.remove();
-    
-    // Add the task to the completed view.
-    // TODO Add a completed section.
+    // Remove the finish button from taskview
+    taskView.querySelector(".task-view-finish-button").remove();
 
+    // Add the task to the completed view.
+    // I know that append will not duplicate elements since
+    // "if the given child is a reference to an existing node in the document,
+    // appendChild() moves it from its current position to the new position."
+    document.querySelector("#tasks-completed").append(taskView);
+
+    ///// TODO Add a completed section.
+    
   }
 }
 

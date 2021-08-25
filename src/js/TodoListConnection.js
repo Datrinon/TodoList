@@ -63,10 +63,11 @@ class TaskListConnection {
   update(item) {
     let index = this.#storage.findIndex(task => task.id === item.id);
     this.#storage[index] = item;
+
+    window.onbeforeunload = () => this.#saveToStorage();
   }
 
   #saveToStorage() {
-    alert(this.#storage);
     localStorage.setItem(this.#STORAGE_KEY, JSON.stringify(this.#storage));
   }
 
@@ -80,11 +81,11 @@ class TaskListConnection {
 
 const connection = new TaskListConnection(STORAGE_KEY);
 
-window.onbeforeunload = () => connection.saveToStorage();
 
 // Didn't work
 // Putting it in a function () {}
 // Putting it in outside of class and exposing it
 // For some reason array is still 0 length?!
+// this wasn't getting updated!!
 
 export default connection;
