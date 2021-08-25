@@ -54,8 +54,8 @@ class TaskListConnection {
     }
   }
 
-  getItemById(index) {
-    let item = this.#storage.find(elem => elem.id === index);
+  getItemById(id) {
+    let item = this.#storage.find(elem => elem.id === +id);
 
     return item;
   }

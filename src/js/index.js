@@ -30,15 +30,18 @@ const c = new Component();
   header.append(navbar);
 
   const activeTaskList = c.section("tasks-active");
+  const addForm = c.section("tasks-add");
   const completedTasksList = c.section("tasks-completed");
-  const addTask = TodoListElement.addTaskButton();
+  const addTaskButton = TodoListElement.addTaskButton();
+
+  addForm.append(addTaskButton);
 
   let activeLabel = c.heading("Active", 2, "task-section-header");
   let completedLabel = c.heading("Completed", 2, "task-section-header");
   activeTaskList.append(activeLabel);
   completedTasksList.append(completedLabel);
 
-  main.append(activeTaskList, addTask, completedTasksList);
+  main.append(activeTaskList, addForm, completedTasksList);
 
   let initialTasks = connection.getAllItems();
 

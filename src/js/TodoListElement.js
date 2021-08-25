@@ -34,19 +34,26 @@ export class TodoListElement {
   }
 
   /**
-   * A generic add form for a Task.
-   * @returns form - form element with Task attributes.
+   * Generates fields for the form based on the task attributes.
+   * @param {} form - The form to add fields on.
+   * @return form = The form with fields now added onto it.
    */
-  static addTaskForm() {
-    // Enumerate through the properties of a Task object, and then use that
-    // to create inputs based on the type.
-    const form = document.createElement("form");
-    form.id = "add-task-form";
-
+  static _generateTaskFormFields(form, existingTaskId = null) {
     let p = priority; // calling priority by itself was undefined earlier. 
     // Maybe something to do with export behavior and lexical environment?
+    // After using connection in index, it seems that it has to do with the fact
+    // is in a class?
 
     let titleField = c.formInput("Title", "text", "task-title", "title");
+    // add event listeners here for title
+    titleField[1].addEventListener("input", (e) => {
+      if (e.currentTarget.value !== "") {
+        document.querySelector("#add-task-submit").removeAttribute("disabled");
+      } else {
+        document.querySelector("#add-task-submit").setAttribute("disabled", "");
+      }
+    });
+
     let priorityField = c.dropdown("Priority", "priority", "task-priority", ...Object.keys(p));
     let descriptionField = c.textArea("Description", "description", "task-description");
     let categoryField = c.formInput("Category", "text", "task-categories", "categories");
@@ -60,37 +67,113 @@ export class TodoListElement {
       form.append(field[0], field[1]);
     }
 
-    let okButton = c.button("Create Task");
-    okButton.id = "add-task-submit";
-    let cancelButton = c.button("Cancel");
-    cancelButton.id = "add-task-cancel";
-    
+    if (existingTaskId !== null) {
+      let taskView = document.querySelector(`#task-${existingTaskId}`);
+      let task = connection.getItemById(existingTaskId);
+      titleField[1].value = task.title;
+      //priorityField[1].value = task.priority;
+      taskView.querySelectorAll('[name="priority"] > option').forEach(elem => {
+        if (elem.value === task.priority) {
+          elem.setAttribute("selected", "true");
+        }
+      });
+
+      // categoryField[1].value = task // TODO fill out category field
+      descriptionField[1].value = task.description;
+      dueDateField[1].value = task.dueDate;
+    }
+
+
+    return form;
+  }
+
+  static _generateTaskFormButtons(form, existingTaskId = null) {
+    let okButton;
+    let cancelButton;
+
+    okButton = c.button("Create Task");
+    cancelButton = c.button("Close");
+
     okButton.setAttribute("type", "button");
     okButton.setAttribute("disabled", "");
     okButton.setAttribute("autocomplete", "off");
-    
+
     cancelButton.setAttribute("type", "button");
-    cancelButton.addEventListener("click", () => {
-      TodoListElement.closeForm();
-    });
+    cancelButton.addEventListener("click", TodoListElement._closeForm);
 
-    // add event listeners here for title
-    titleField[1].addEventListener("input", (e) => {
-      if (e.currentTarget.value !== "") {
-        document.querySelector("#add-task-submit").removeAttribute("disabled");
-      } else {
-        document.querySelector("#add-task-submit").setAttribute("disabled", "");
-      }
-    });
+    cancelButton.id = "add-task-cancel";
+    if (existingTaskId === null) {
+      okButton.id = "add-task-submit";
+      
+      okButton.addEventListener("click", TodoListElement._handleAddTask);
+    } else {
+      okButton.textContent = "Update";
+      okButton.id = "update-task-submit";
 
+      okButton.addEventListener("click", (e) => {
+        TodoListElement._handleUpdateTask(taskId);
+      });
+    }
+    
     form.append(okButton, cancelButton);
 
-    okButton.addEventListener("click", TodoListElement._handleSubmission);
+    return form;
+  }
+
+  static _editTask(e) {
+    // pop up an addtask form that looks like the addtask form.
+    let existingTaskId = +e.currentTarget.parentNode.id.split("task-")[1];
+
+    const form = document.createElement("form");
+    form.id = "edit-task-form";
+
+    form = TodoListElement._generateTaskFormFields(form, existingTaskId);
+    form = TodoListElement._generateTaskFormButtons(form, existingTaskId);
+
+    e.currentTarget.parentNode.append(form);
+
+    // if add form open close that thing up.
+    document.querySelector("#display-ask-form-button").classList.remove("no-display");
+    document.querySelector("#add-task-form").remove();
+  }
+
+
+  /**
+   * A generic add form for a Task.
+   * @returns form - form element with Task attributes.
+   */
+  static addTaskForm() {
+    // Enumerate through the properties of a Task object, and then use that
+    // to create inputs based on the type.
+    const form = document.createElement("form");
+    form.id = "add-task-form";
+
+    form = TodoListElement._generateTaskFormFields(form);
+    form = TodoListElement._generateTaskFormButtons(form);
     
     return form;
   }
 
-  static _handleSubmission() {
+  static _handleUpdateTask(taskId) {
+    let task = TodoListElement._parseFormFields();
+    task.id = taskId;
+
+    connection.update(task);
+
+    let taskView = document.querySelector(`#task-${taskId}`);
+
+    taskView.querySelector(".task-view-title").textContent = task.title;
+    taskView.querySelector(".task-view-priority").textContent = task.priority;
+    taskView.querySelector(".task-view-description").textContent = task.description;
+    taskView.querySelector(".task-view-create-date").textContent = format(task.id, "'Added' MM/dd/yyyy");
+    taskView.querySelector(".task-view-due-date").textContent = task.dueDate;
+    // TODO add category field
+    // TODO fix due date field
+    // TODO show task updated message somewhere.    
+    console.log("Task updated successfully.");
+  }
+
+  static _handleAddTask() {
     let task = TodoListElement._parseFormFields();
 
     document.querySelector("#add-task-submit").setAttribute("disabled", "");
@@ -118,9 +201,14 @@ export class TodoListElement {
   }
 
 
-  static closeForm() {
-    document.querySelector("#add-task-form").remove();
-    document.querySelector("#display-ask-form-button").classList.remove("no-display");
+  static _closeForm(e) {
+    let id = e.currentTarget.parentNode.id;
+    e.currentTarget.parentNode.remove();
+
+    //document.querySelector("#add-task-form").remove();
+    if (id === "add-task-form") {
+      document.querySelector("#display-ask-form-button").classList.remove("no-display");
+    } 
   }
 
   static addTaskToView(task, parentSelector) {
@@ -129,17 +217,19 @@ export class TodoListElement {
     let header = c.heading(task.title, 2, "task-view-title");
     let createDate = c.paragraph(format(task.id, "'Added' MM/dd/yyyy"), "task-view-create-date"); //c.paragraph();
     let dueDate = c.paragraph(task.dueDate, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
-    let priority = c.paragraph(task.priority, "task-view-title");
+    let priority = c.paragraph(task.priority, "task-view-priority");
     let description = c.paragraph(task.description, "task-view-description");
     let finishButton = c.button("Complete", "task-view-finish-button");
+    let editButton = c.button("Edit", "task-view-edit-button");
 
     finishButton.addEventListener("click", TodoListElement._completeTask);
+    editButton.addEventListener("edit", TodoListElement._editTask);
 
     taskView.append(header, priority, description, createDate, dueDate);
     if (task.completed) {
       document.querySelector("#tasks-completed").append(taskView);
     } else {
-      taskView.append(finishButton);
+      taskView.append(finishButton, editButton);
       document.querySelector(parentSelector).append(taskView);
     }
   }
@@ -164,9 +254,9 @@ export class TodoListElement {
     document.querySelector("#tasks-completed").append(taskView);
 
     ///// TODO Add a completed section.
-    
   }
 }
+
 
 // TODO LIST
 /*
@@ -175,12 +265,14 @@ export class TodoListElement {
 //   b. Use the components library to generate an input and label.
 //   c. return a form from addTaskForm
 // 2. Work on the C(reate) part of the app.
-3. Local Storage
-4. Complete Button
+// 3. Local Storage
+// 4. Complete Button
+5. The ability to modify tasks.
+6. A global class containing constants
 
 
-To be done:
-- Local storage save
-- Modify and Update
-- UI s
+Backburner:
+- Categories
+- Navbar area
+- UI
 */
