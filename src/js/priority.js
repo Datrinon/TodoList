@@ -9,10 +9,10 @@
 // export {Priority as default};
 
 const priority = {
-    CRITICAL: 4,
-    HIGH: 3,
-    MEDIUM: 2,
-    LOW: 1,
-    NONE: 0
+  NONE: 0,
+  LOW: 1,
+  MEDIUM: 2,
+  HIGH: 3,
+  CRITICAL: 4,
 }
 export default priority;

@@ -87,6 +87,11 @@ export class TodoListElement {
   static addTask() {
     let task = TodoListElement._parseFormFields();
 
+    document.querySelector("#add-task-submit").setAttribute("disabled", "");
+    document.querySelectorAll("input[id^=task-]").forEach(input => {
+      input.value = "";
+    });
+
     TodoListElement.addTaskToView(task, ".main");
   }
 
@@ -95,7 +100,7 @@ export class TodoListElement {
     task.title = document.querySelector("#task-title").value;
     task.priority = document.querySelector("#task-priority").value;
     task.description = document.querySelector("#task-description").value;
-    // TODO change this thing later right here because it's going to be like 
+    // TODO change the categories input later right here because it's going to be like 
     // a tag implementation instead of just a simple text field.
     task.categories = document.querySelector("#task-categories").value;
 
@@ -111,7 +116,7 @@ export class TodoListElement {
   static addTaskToView(task, parent) {
     let taskView = c.div("task");
     let header = c.heading(task.title, "task-view-title");
-    let date = c.paragraph(task.date); //c.paragraph(format(task.date, "MM/dd/yyyy"));
+    let date = c.paragraph(format(task.createDate, "MM/dd/yyyy"), "task-view-date"); //c.paragraph();
     let priority = c.paragraph(task.priority, "task-view-title");
     let description = c.paragraph(task.description, "task-view-description");
 
