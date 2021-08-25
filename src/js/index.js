@@ -15,6 +15,7 @@ import '../css/index.css';
 
 import {Component} from "./component.js";
 import {TodoListElement} from "./TodoListElement.js";
+import connection from "./TodoListConnection.js";
 
 const c = new Component();
 
@@ -34,5 +35,12 @@ const c = new Component();
 
   main.append(taskList, addTask);
 
+  let initialTasks = connection.getAllItems();
+
+  if (initialTasks !== null) {
+    for (let item of initialTasks) {
+      TodoListElement.addTaskToView(item, "#notes");
+    }
+  }
 
 })();

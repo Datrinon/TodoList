@@ -14,19 +14,27 @@ class TaskListConnection {
   #storage;
   #STORAGE_KEY;
 
-  constructor(storageArray, STORAGE_KEY) {
+  constructor(STORAGE_KEY) {
     this.#STORAGE_KEY = STORAGE_KEY;
     if (!localStorage.getItem(STORAGE_KEY)) {
-      this.#storage = localStorage.getItem(STORAGE_KEY);    
+      this.#storage = [];
     } else {
-      this.#storage = storageArray;
+      this.#storage = this.#restoreFromStorage();
     }
 
-    window.beforeOnUnload = () => this.#saveToStorage();
   }
 
   add(...items) {
     this.#storage.push(...items);
+
+    window.onbeforeunload = () => this.#saveToStorage();
+    // Did you know? this updates each time, and assigning that to a handler
+    // unfortunately the handler will not recognize the update, so we have
+    // to do it manually each time.
+    // TODO
+    // An interesting test
+    // Set a conditional that will only save onbeforeunload if the storage
+    // length is one.
   }
 
   remove(...items) {
@@ -39,7 +47,11 @@ class TaskListConnection {
   }
 
   getAllItems() {
-    return this.#storage;
+    if (this.#storage.length != 0) {
+      return this.#storage;
+    } else {
+      return null;
+    }
   }
 
   getItemById(index) {
@@ -54,11 +66,25 @@ class TaskListConnection {
   }
 
   #saveToStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.#storage, this.#STORAGE_KEY));
+    alert(this.#storage);
+    localStorage.setItem(this.#STORAGE_KEY, JSON.stringify(this.#storage));
+  }
+
+  #restoreFromStorage() {
+    let jsonString = localStorage.getItem(this.#STORAGE_KEY);
+    let array = JSON.parse(jsonString);
+
+    return array;
   }
 }
 
-const connection = new TaskListConnection(_tasks);
-Object.freeze(connection);
+const connection = new TaskListConnection(STORAGE_KEY);
+
+window.onbeforeunload = () => connection.saveToStorage();
+
+// Didn't work
+// Putting it in a function () {}
+// Putting it in outside of class and exposing it
+// For some reason array is still 0 length?!
 
 export default connection;

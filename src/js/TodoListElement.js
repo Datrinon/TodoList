@@ -85,7 +85,7 @@ export class TodoListElement {
 
     form.append(okButton, cancelButton);
 
-    okButton.addEventListener("click", TodoListElement.handleSubmission);
+    okButton.addEventListener("click", TodoListElement._handleSubmission);
     
     return form;
   }
@@ -123,7 +123,7 @@ export class TodoListElement {
     document.querySelector("#display-ask-form-button").classList.remove("no-display");
   }
 
-  static addTaskToView(task, parent) {
+  static addTaskToView(task, parentSelector) {
     let taskView = c.div("task");
     taskView.id = "task-" + task.id;
     let header = c.heading(task.title, 2, "task-view-title");
@@ -135,7 +135,7 @@ export class TodoListElement {
 
     taskView.append(header, priority, description, createDate, dueDate, finishButton);
 
-    document.querySelector(parent).append(taskView);
+    document.querySelector(parentSelector).append(taskView);
   }
 
   static _completeTask(e) {
