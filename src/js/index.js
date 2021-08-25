@@ -13,29 +13,26 @@ import '../css/sticky-footer.css';
 import '../css/responsive-header.css';
 import '../css/index.css';
 
-import {Task} from "./task.js";
 import {Component} from "./component.js";
-import { TodoListElement } from "./TodoListElement.js";
+import {TodoListElement} from "./TodoListElement.js";
 
 const c = new Component();
-// index is the main controller.
-// use this to rig events.
-
-
 
 /**
- * Called upon load.
+ * Called upon load. Initializes general GUI elements, like the header,
+ * navbar, controls, etc.
  */
 (function main() {
-  // Spawn a button.
-  // It says Add Task...
+
+
   const [header, main, footer] = [...c.initializeStructure("To-Do List")];
   const navbar = c.navbar("Good Evening!");
   header.append(navbar);
 
+  const taskList = c.section("notes");
   const addTask = TodoListElement.addTaskButton();
 
-  main.append(addTask);
+  main.append(taskList, addTask);
 
-  
+
 })();

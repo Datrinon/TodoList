@@ -2,10 +2,12 @@ import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 import {Component} from "./component.js";
 import {Task} from "./task.js";
 import priority from "./priority.js";
+import connection from "./component.js";
 const c = new Component();
 
 /**
  * A class containing GUI elements that would be used inside of a To-Do List App.
+ * Such GUI elements have their functionalities incorporated here.
  */
 export class TodoListElement {
   constructor() {
@@ -46,8 +48,10 @@ export class TodoListElement {
     let priorityField = c.dropdown("Priority", "priority", "task-priority", ...Object.keys(p));
     let descriptionField = c.textArea("Description", "description", "task-description");
     let categoryField = c.formInput("Category", "text", "task-categories", "categories");
+    let dueDateField = c.formInput("Due Date", "date", "task-dueDate", "dueDate");
     
-    let allFields = [titleField, priorityField, descriptionField, categoryField];
+    let allFields = [titleField, priorityField, descriptionField,
+        dueDateField, categoryField];
 
     for (let field of allFields) {
       // add label and the input element of each field.
@@ -79,20 +83,21 @@ export class TodoListElement {
 
     form.append(okButton, cancelButton);
 
-    okButton.addEventListener("click", TodoListElement.addTask);
+    okButton.addEventListener("click", TodoListElement.handleSubmission);
     
     return form;
   }
 
-  static addTask() {
+  static _handleSubmission() {
     let task = TodoListElement._parseFormFields();
 
     document.querySelector("#add-task-submit").setAttribute("disabled", "");
-    document.querySelectorAll("input[id^=task-]").forEach(input => {
-      input.value = "";
-    });
+    document.querySelectorAll("#add-task-form input[id^=task-], #add-task-form textarea")
+        .forEach(input => {
+          input.value = "";
+        });
 
-    TodoListElement.addTaskToView(task, ".main");
+    TodoListElement.addTaskToView(task, "#notes");
   }
 
   static _parseFormFields() {
@@ -100,6 +105,7 @@ export class TodoListElement {
     task.title = document.querySelector("#task-title").value;
     task.priority = document.querySelector("#task-priority").value;
     task.description = document.querySelector("#task-description").value;
+    task.dueDate = document.querySelector("#task-dueDate").value;
     // TODO change the categories input later right here because it's going to be like 
     // a tag implementation instead of just a simple text field.
     task.categories = document.querySelector("#task-categories").value;
@@ -115,14 +121,28 @@ export class TodoListElement {
 
   static addTaskToView(task, parent) {
     let taskView = c.div("task");
-    let header = c.heading(task.title, "task-view-title");
-    let date = c.paragraph(format(task.createDate, "MM/dd/yyyy"), "task-view-date"); //c.paragraph();
+    taskView.id = "task-" + task.id;
+    let header = c.heading(task.title, 2, "task-view-title");
+    let createDate = c.paragraph(format(task.id, "'Added' MM/dd/yyyy"), "task-view-create-date"); //c.paragraph();
+    let dueDate = c.paragraph(task.dueDate, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
     let priority = c.paragraph(task.priority, "task-view-title");
     let description = c.paragraph(task.description, "task-view-description");
+    let finishButton = c.button("Complete", "task-view-finish-button");
 
-    taskView.append(header, priority, description, date);
+    taskView.append(header, priority, description, createDate, dueDate, finishButton);
 
     document.querySelector(parent).append(taskView);
+  }
+
+  static _completeTask(e) {
+
+    // Remove the task from view
+    // Mark the task as completed
+    // update the storage array.
+    // Add the task to the completed view.
+    
+
+    //e.currentTarget.parentNode. 
   }
 }
 
@@ -132,10 +152,9 @@ export class TodoListElement {
 //   a. Use the enumerable properties to determine the type of input to be added.
 //   b. Use the components library to generate an input and label.
 //   c. return a form from addTaskForm
-2. Work on the C(reate) part of the app.
-I fill... out the form. The form sends data someway. Let's see if we can do it
-without query selectors.
-
+// 2. Work on the C(reate) part of the app.
+3. Local Storage
+4. Complete Button
 
 
 To be done:

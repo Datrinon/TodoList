@@ -2,18 +2,22 @@ import priority from "./priority.js";
 
 export class Task {
   
-  createDate;
+  id;
   title;
   priority;
   description;
   categories;
+  dueDate;
+  completed;
   
   constructor() {
-    this.createDate = Date.now();
+    this.id = Date.now();
     this.title = "";
     this.priority = priority;
     this.description = "";
     this.categories = [];
+    this.dueDate = null;
+    this.completed = false;
   }
 
   displayTaskInfo() {
