@@ -12,6 +12,7 @@ import '../css/reset.css';
 import '../css/sticky-footer.css';
 import '../css/responsive-header.css';
 import '../css/index.css';
+import '../css/draggable.css';
 
 import {Component} from "./component.js";
 import {TodoListElement} from "./TodoListElement.js";

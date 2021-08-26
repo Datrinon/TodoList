@@ -128,24 +128,30 @@ export class TodoListElement {
   }
 
   static _editTaskForm(e) {
-    console.log("Calling");
-    // pop up an addtask form that looks like the addtask form.
+    // pop up an edit form that looks like the addtask form.
     let existingTaskId = +e.currentTarget.parentNode.id.split("task-")[1];
 
     let form = document.createElement("form");
     form.id = "edit-task-form";
 
+    // if add form open close that form up.
+    document.querySelector("#display-ask-form-button").classList.remove("no-display");
+    let addForm = document.querySelector("#add-task-form");
+    if (addForm != null) {
+      console.log("Closing add form...");
+      document.querySelector("#add-task-form").remove();
+    }
+    // Had to implement this since the append call
+    // doesn't seem to be able to remove
+    // a duplicate form...?
+    if (document.querySelector(`#${form.id}`) !== null) {
+      document.querySelector(`#${form.id}`).remove();
+    }
+
     form = TodoListElement._generateTaskFormFields(form, existingTaskId);
     form = TodoListElement._generateTaskFormButtons(form, existingTaskId);
 
     e.currentTarget.parentNode.append(form);
-
-    // if add form open close that thing up.
-    document.querySelector("#display-ask-form-button").classList.remove("no-display");
-    let addForm = document.querySelector("#add-task-form");
-    if (addForm != null) {
-      document.querySelector("#add-task-form").remove();
-    }
   }
 
 
@@ -182,6 +188,8 @@ export class TodoListElement {
     // TODO fix due date field
     // TODO show task updated message somewhere.    
     console.log("Task updated successfully.");
+    // remove the form after we've finished using it.
+    taskView.querySelector("#edit-task-form").remove();
   }
 
   static _handleAddTask() {
@@ -232,6 +240,9 @@ export class TodoListElement {
     let description = c.paragraph(task.description, "task-view-description");
     let finishButton = c.button("Complete", "task-view-finish-button");
     let editButton = c.button("Edit", "task-view-edit-button");
+    let dragButton = c.button("", "task-view-drag-button");
+    let dragIcon = c.faIcon("fas", "fa-grip-vertical");
+    dragButton.append(dragIcon);
 
     finishButton.addEventListener("click", TodoListElement._completeTask);
     editButton.addEventListener("click", TodoListElement._editTaskForm);
@@ -240,8 +251,80 @@ export class TodoListElement {
     if (task.completed) {
       document.querySelector("#tasks-completed").append(taskView);
     } else {
-      taskView.append(finishButton, editButton);
+      taskView.append(finishButton, editButton, dragButton);
       document.querySelector(parentSelector).append(taskView);
+      // TODO draggable only when dragButton selected
+      taskView.setAttribute("draggable", "true");
+      taskView.classList.add("draggable");
+      TodoListElement._applyDragCapabilities();
+    }
+  }
+
+  static _applyDragCapabilities() {
+    let draggables = document.querySelectorAll(".draggable");
+    let container = document.querySelector("#tasks-active");
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener("dragstart", () => {
+        draggable.classList.add("dragging");
+      });
+
+      draggable.addEventListener("dragend", () => {
+        draggable.classList.remove("dragging");
+      });
+    })
+
+    container.addEventListener('dragover', (e) => {
+      // dragover: fired when an element or text selection
+      // is being dragged over a valid drop target 
+      // use e.preventDefault() -- prevent default behavior that is 
+      // not explicitly handled, which, in this case, is dragging.
+      e.preventDefault();
+
+      const afterElement = getDragAfterElement(e.clientY);
+      const activeDraggable = document.querySelector(".dragging");
+      
+      // if afterElement is null, we're at the bottom fo the list
+      if (afterElement === null) {
+        container.append(activeDraggable); 
+      } else {
+      // else our mouse is hovering above an element, so insert before it.
+        container.insertBefore(activeDraggable, afterElement);
+      }
+    });
+
+    function getDragAfterElement(mouseY) {
+      // get all elements not being dragged.
+      const inactiveDraggables = Array.from(container.
+          querySelectorAll(".draggable:not(.dragging)"));
+
+      // reduce() call, which will find us the element that is 
+      // after the mouse cursor based on the y position we pass in.
+      // we just need to figure out the offset of the cursor
+      // against the element after it.
+      return inactiveDraggables.reduce((closestElem, elem) => {
+        // getBoundingClientRect:
+        // returns a DOMRect object providing information
+        // about the size of an element and its position relative
+        // to the viewport.
+        // we get the size of the task (width + height)
+        // and then its position rel to the viewport (top and left)
+        const box = elem.getBoundingClientRect();
+        // distance from center of box to our mouse.
+        const offset = mouseY - box.top - (box.height / 2);
+        //console.log(offset);
+        if (offset < 0 && offset > closestElem.offset) {
+          // for this condition, the mouse is over the element
+          // and the offset beats the closestElem offset.
+          // which would be negative since only when the mouse is above
+          // a box does the offset return negative.
+          return {offset: offset, element: elem};
+        } else {
+          return closestElem; // maintain closestElem as closest.
+        }
+       }, {offset: Number.NEGATIVE_INFINITY}).element;
+      // offset is infinity so that we have an element that can be returned
+      // every single element is going to be closer than the INFINITY.
     }
   }
 
@@ -278,8 +361,12 @@ export class TodoListElement {
 // 2. Work on the C(reate) part of the app.
 // 3. Local Storage
 // 4. Complete Button
-5. The ability to modify tasks.
-6. A global class containing constants
+// 5. The ability to modify tasks.
+6. The ability to drag and reorder
+tasks.
+7. A global class containing constants 
+referring to IDs associated with the GUI 
+elements.
 
 
 Backburner:

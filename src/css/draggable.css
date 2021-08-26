@@ -1,0 +1,8 @@
+.task {
+  margin: 15px;
+}
+
+.draggable.dragging {
+  border: 1px solid red;
+  opacity: 0.3;
+}
