@@ -1,3 +1,7 @@
+.task {
+  border: 1px solid rgba(0,0,0,0);
+}
+
 .task:hover {
   border: 1px solid blue;
 }

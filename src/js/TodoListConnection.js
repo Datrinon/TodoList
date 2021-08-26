@@ -37,12 +37,10 @@ class TaskListConnection {
     // length is one.
   }
 
-  remove(...items) {
-    for (let item of items) {
-      let index = this.#storage.findIndex(elem => elem.id === item.id);
-      if (index !== -1) {
-        this.#storage.splice(index, 1);
-      }
+  remove(id) {
+    let index = this.#storage.findIndex(elem => elem.id === id);
+    if (index !== -1) {
+      this.#storage.splice(index, 1);
     }
   }
 

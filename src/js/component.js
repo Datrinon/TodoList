@@ -332,4 +332,47 @@ export class Component {
 
     return [label, ta];
   }
+
+  confirmModal(className, title, message, positiveButtonLabel,
+    negativeButtonLabel, positiveCallback, negativeCallback = null) {
+      const modalWrapper = this.div();
+      modalWrapper.id = "prompt-wrapper";
+      const modal = this.div(className);
+      const titleHeader = this.heading(title, 1, "modal-header");
+      const messageParagraph = this.paragraph("modal-dialog");
+      const positiveButton = this.button(positiveButtonLabel, "modal-confirm");
+      const negativeButton = this.button(negativeButtonLabel, "modal-cancel");
+
+      const buttonSection = this.div();
+
+      if (negativeCallback === null) {
+        negativeCallback = () => {
+          console.log("Negative pressed.");
+          modalWrapper.remove();  
+        };
+      }
+
+      // prevent events from being fired underneath the modal.
+      modalWrapper.addEventListener("click", (e) => e.stopPropagation(), 
+      {
+        capture: true
+      });
+
+      positiveButton.addEventListener("click", positiveCallback);
+      negativeButton.addEventListener("click", negativeCallback);
+
+      buttonSection.append(positiveButton, negativeButton);
+      modal.append(titleHeader, messageParagraph, buttonSection);
+      modalWrapper.append(modal);
+
+      // styling
+      modalWrapper.style.backgroundColor = "rgba(0,0,0,0.7)";
+      modalWrapper.style.position = "fixed";
+      modal.style.position = "fixed";
+      modalWrapper = "1";
+      modal.style.zIndex = "2";
+
+
+      return modalWrapper;
+  }
 }

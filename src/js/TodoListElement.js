@@ -127,7 +127,7 @@ export class TodoListElement {
     return form;
   }
 
-  static _editTaskForm(e) {
+  static _displayEditTaskForm(e) {
     // pop up an edit form that looks like the addtask form.
     let existingTaskId = +e.currentTarget.parentNode.id.split("task-")[1];
 
@@ -243,18 +243,31 @@ export class TodoListElement {
     let dragButton = c.button("", "task-view-drag-button");
     let dragIcon = c.faIcon("fas", "fa-grip-vertical");
     dragButton.append(dragIcon);
+    let deleteButton = c.button("Delete", "task-view-delete-button");
+    let deleteIcon = c.faIcon("fas", "fa-trash-alt");
+    deleteButton.append(deleteIcon);
 
     finishButton.addEventListener("click", TodoListElement._completeTask);
-    editButton.addEventListener("click", TodoListElement._editTaskForm);
+    editButton.addEventListener("click", TodoListElement._displayEditTaskForm);
+    deleteButton.addEventListener("click", TodoListElement._deleteTask);
 
     taskView.append(header, priority, description, createDate, dueDate);
     if (task.completed) {
       document.querySelector("#tasks-completed").append(taskView);
     } else {
-      taskView.append(finishButton, editButton, dragButton);
+      taskView.append(finishButton, editButton, deleteButton, dragButton);
       document.querySelector(parentSelector).append(taskView);
       // TODO draggable only when dragButton selected
-      taskView.setAttribute("draggable", "true");
+      dragButton.addEventListener("mousedown", () => {
+        console.log("Mouse down");
+        taskView.setAttribute("draggable", "true");
+      });
+
+      dragButton.addEventListener("mouseup", () => {
+        console.log("Mouse up");
+        taskView.removeAttribute("draggable");
+      });
+
       taskView.classList.add("draggable");
       TodoListElement._applyDragCapabilities();
     }
@@ -313,11 +326,11 @@ export class TodoListElement {
         // distance from center of box to our mouse.
         const offset = mouseY - box.top - (box.height / 2);
         //console.log(offset);
-        if (offset < 0 && offset > closestElem.offset) {
-          // for this condition, the mouse is over the element
-          // and the offset beats the closestElem offset.
-          // which would be negative since only when the mouse is above
-          // a box does the offset return negative.
+        if (offset > closestElem.offset && offset < 0) {
+          // return a new 'closestElem' if this elem offset is 
+          // greater than the other (it's closer than any
+          // other element in the array) and the offset
+          // is less than 0 (the mouse is above the element)
           return {offset: offset, element: elem};
         } else {
           return closestElem; // maintain closestElem as closest.
@@ -346,9 +359,35 @@ export class TodoListElement {
     // "if the given child is a reference to an existing node in the document,
     // appendChild() moves it from its current position to the new position."
     document.querySelector("#tasks-completed").append(taskView);
-
-    ///// TODO Add a completed section.
   }
+
+  static _deleteTask(e) {
+    let taskView = e.currentTarget.parentNode;
+    let taskId = +taskView.id.split("task-")[1];
+    let taskTitle = taskView.querySelector(".task-view-title").textContent;
+
+    const removeTask = (e) => {
+      // remove the view
+      taskView.remove();
+      // remove the task from the storage.
+      connection.remove(taskId);
+
+      console.log("Task delete successfully.");
+    }
+
+    let removePrompt = c.confirmModal(
+        "add-tasks-delete-dialog",
+        "Delete Task",
+        `Are you sure you want to delete ${taskTitle}?`,
+        "Delete",
+        "Cancel",
+        removeTask,
+        null
+    );
+
+    document.querySelector(".content").append(removePrompt);
+  }
+
 }
 
 
@@ -362,9 +401,9 @@ export class TodoListElement {
 // 3. Local Storage
 // 4. Complete Button
 // 5. The ability to modify tasks.
-6. The ability to drag and reorder
-tasks.
-7. A global class containing constants 
+// 6. The ability to drag and reorder tasks.
+7. The ability to delete tasks. 
+8. A global class containing constants 
 referring to IDs associated with the GUI 
 elements.
 
