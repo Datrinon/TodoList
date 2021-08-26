@@ -14,15 +14,22 @@ export class Component {
 
   /**
    * Initializes a basic HTML skeleton for the web page, generating a header,
-   * main, and sticky footer. 
+   * main, and sticky footer.
    * 
    * @param {*} headerTitle - What the web page is called. 
+   * @param {bool} emptyHeader - Should the header use a default structure?
+   * The default structure looks like [ Logo | | | | Navigation Links]
    * @returns - An array containing references to the generated header, main, and footer.
    */
-  initializeStructure(headerTitle) {
+  initializeStructure(headerTitle, emptyHeader = false) {
     const body = document.body;
     const mainWrapper = this.div("content");
-    const header = this.header("To-Do List");
+    const header;
+    if (emptyHeader) {
+      header = document.createElement("header");
+    } else {
+      header = this.header(headerTitle);
+    }
     const main = document.createElement("main");
     const footer = this.footer();
     main.classList.add("main");
@@ -335,15 +342,16 @@ export class Component {
 
   confirmModal(className, title, message, positiveButtonLabel,
     negativeButtonLabel, positiveCallback, negativeCallback = null) {
-      const modalWrapper = this.div();
+      let modalWrapper = this.div();
       modalWrapper.id = "prompt-wrapper";
-      const modal = this.div(className);
+      let modal = this.div(className);
+      
       const titleHeader = this.heading(title, 1, "modal-header");
-      const messageParagraph = this.paragraph("modal-dialog");
+      const messageParagraph = this.paragraph(message, "modal-dialog");
       const positiveButton = this.button(positiveButtonLabel, "modal-confirm");
       const negativeButton = this.button(negativeButtonLabel, "modal-cancel");
 
-      const buttonSection = this.div();
+      const buttonSection = this.div("modal-button-area");
 
       if (negativeCallback === null) {
         negativeCallback = () => {
@@ -353,10 +361,10 @@ export class Component {
       }
 
       // prevent events from being fired underneath the modal.
-      modalWrapper.addEventListener("click", (e) => e.stopPropagation(), 
-      {
-        capture: true
-      });
+      // modalWrapper.addEventListener("click", (e) => e.stopPropagation(), 
+      // {
+      //   capture: true
+      // });
 
       positiveButton.addEventListener("click", positiveCallback);
       negativeButton.addEventListener("click", negativeCallback);
@@ -365,13 +373,7 @@ export class Component {
       modal.append(titleHeader, messageParagraph, buttonSection);
       modalWrapper.append(modal);
 
-      // styling
-      modalWrapper.style.backgroundColor = "rgba(0,0,0,0.7)";
-      modalWrapper.style.position = "fixed";
-      modal.style.position = "fixed";
-      modalWrapper = "1";
-      modal.style.zIndex = "2";
-
+      // styling moved to .css page.
 
       return modalWrapper;
   }

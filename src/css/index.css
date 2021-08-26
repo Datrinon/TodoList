@@ -1,7 +1,33 @@
+#prompt-wrapper {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+}
+
 .task {
   border: 1px solid rgba(0,0,0,0);
 }
 
 .task:hover {
   border: 1px solid blue;
+}
+
+.add-tasks-delete-dialog {
+  position: relative;
+  top: 25%;
+  border: 1px solid white;
+  background-color: white;
+  padding: 15px;
+  border-radius: 5px;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+  z-index: 2
+}
+
+.task > div {
+  border: 1px solid black;
 }

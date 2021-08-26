@@ -26,7 +26,7 @@ const c = new Component();
  */
 (function loadGUI() {
 
-  const [header, main, footer] = [...c.initializeStructure("To-Do List")];
+  const [header, main, footer] = [...c.initializeStructure("To-Do List", true)];
   const navbar = c.navbar("Good Evening!");
   header.append(navbar);
 

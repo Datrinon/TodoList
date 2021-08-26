@@ -42,6 +42,7 @@ class TaskListConnection {
     if (index !== -1) {
       this.#storage.splice(index, 1);
     }
+    window.onbeforeunload = () => this.#saveToStorage();
   }
 
   getAllItems() {

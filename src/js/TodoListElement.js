@@ -232,39 +232,57 @@ export class TodoListElement {
 
   static addTaskToView(task, parentSelector) {
     let taskView = c.div("task");
+
+    let taskInformationArea = c.div("task-information");
+    let taskDragArea = c.div("task-move");
+    let taskControlArea = c.div("task-controls");
+
     taskView.id = "task-" + task.id;
     let header = c.heading(task.title, 2, "task-view-title");
     let createDate = c.paragraph(format(task.id, "'Added' MM/dd/yyyy"), "task-view-create-date"); //c.paragraph();
     let dueDate = c.paragraph(task.dueDate, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
     let priority = c.paragraph(task.priority, "task-view-priority");
     let description = c.paragraph(task.description, "task-view-description");
-    let finishButton = c.button("Complete", "task-view-finish-button");
-    let editButton = c.button("Edit", "task-view-edit-button");
-    let dragButton = c.button("", "task-view-drag-button");
-    let dragIcon = c.faIcon("fas", "fa-grip-vertical");
-    dragButton.append(dragIcon);
-    let deleteButton = c.button("Delete", "task-view-delete-button");
+
+    taskInformationArea.append(header, createDate, dueDate, priority, description);
+    
+    let finishButton = c.button("", "task-view-finish-button");
+    let finishIcon = c.faIcon("fas", "fa-check-square");
+    finishButton.append(finishIcon, "Finish");
+    
+    let editButton = c.button("", "task-view-edit-button");
+    let editIcon = c.faIcon("fas", "fa-edit");
+    editButton.append(editIcon, "Edit");
+
+    let deleteButton = c.button("", "task-view-delete-button");
     let deleteIcon = c.faIcon("fas", "fa-trash-alt");
-    deleteButton.append(deleteIcon);
+    deleteButton.append(deleteIcon, "Delete");
+
+    taskControlArea.append(finishButton, editButton, deleteButton);
 
     finishButton.addEventListener("click", TodoListElement._completeTask);
     editButton.addEventListener("click", TodoListElement._displayEditTaskForm);
     deleteButton.addEventListener("click", TodoListElement._deleteTask);
 
-    taskView.append(header, priority, description, createDate, dueDate);
+    let dragButton = c.button("", "task-view-drag-button");
+    let dragIcon = c.faIcon("fas", "fa-grip-vertical");
+    dragButton.append(dragIcon);
+
+    taskDragArea.append(dragButton);
+
     if (task.completed) {
+      taskDragArea.firstChild.remove();
+      taskView.append(taskDragArea, taskInformationArea);
       document.querySelector("#tasks-completed").append(taskView);
     } else {
-      taskView.append(finishButton, editButton, deleteButton, dragButton);
+      taskView.append(taskDragArea, taskInformationArea, taskControlArea);
       document.querySelector(parentSelector).append(taskView);
-      // TODO draggable only when dragButton selected
+
       dragButton.addEventListener("mousedown", () => {
-        console.log("Mouse down");
         taskView.setAttribute("draggable", "true");
       });
 
       dragButton.addEventListener("mouseup", () => {
-        console.log("Mouse up");
         taskView.removeAttribute("draggable");
       });
 
@@ -372,13 +390,14 @@ export class TodoListElement {
       // remove the task from the storage.
       connection.remove(taskId);
 
-      console.log("Task delete successfully.");
+      console.log("Task deleted successfully.");
+      document.querySelector("#prompt-wrapper").remove();
     }
 
     let removePrompt = c.confirmModal(
         "add-tasks-delete-dialog",
         "Delete Task",
-        `Are you sure you want to delete ${taskTitle}?`,
+        `Are you sure you want to delete ${taskTitle.trim()}?`,
         "Delete",
         "Cancel",
         removeTask,
@@ -402,8 +421,9 @@ export class TodoListElement {
 // 4. Complete Button
 // 5. The ability to modify tasks.
 // 6. The ability to drag and reorder tasks.
-7. The ability to delete tasks. 
-8. A global class containing constants 
+//7. The ability to delete tasks. 
+8. Time to add the sidebar.
+9. A global class containing constants 
 referring to IDs associated with the GUI 
 elements.
 
