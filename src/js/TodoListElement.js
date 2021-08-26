@@ -39,6 +39,13 @@ export class TodoListElement {
    * @return form = The form with fields now added onto it.
    */
   static _generateTaskFormFields(form, existingTaskId = null) {
+    let OKButtonId;
+    if (existingTaskId != null) {
+      OKButtonId = "#update-task-submit";
+    } else {
+      OKButtonId = "#add-task-submit";
+    }
+    
     let p = priority; // calling priority by itself was undefined earlier. 
     // Maybe something to do with export behavior and lexical environment?
     // After using connection in index, it seems that it has to do with the fact
@@ -47,10 +54,10 @@ export class TodoListElement {
     let titleField = c.formInput("Title", "text", "task-title", "title");
     // add event listeners here for title
     titleField[1].addEventListener("input", (e) => {
-      if (e.currentTarget.value !== "") {
-        document.querySelector("#add-task-submit").removeAttribute("disabled");
+      if (e.currentTarget.value === "" || e.currentTarget.value === null) {
+        document.querySelector(OKButtonId).setAttribute("disabled", "");
       } else {
-        document.querySelector("#add-task-submit").setAttribute("disabled", "");
+        document.querySelector(OKButtonId).removeAttribute("disabled");
       }
     });
 
@@ -109,9 +116,9 @@ export class TodoListElement {
     } else {
       okButton.textContent = "Update";
       okButton.id = "update-task-submit";
-
+      okButton.removeAttribute("disabled");
       okButton.addEventListener("click", (e) => {
-        TodoListElement._handleUpdateTask(taskId);
+        TodoListElement._handleUpdateTask(existingTaskId);
       });
     }
     
@@ -120,11 +127,12 @@ export class TodoListElement {
     return form;
   }
 
-  static _editTask(e) {
+  static _editTaskForm(e) {
+    console.log("Calling");
     // pop up an addtask form that looks like the addtask form.
     let existingTaskId = +e.currentTarget.parentNode.id.split("task-")[1];
 
-    const form = document.createElement("form");
+    let form = document.createElement("form");
     form.id = "edit-task-form";
 
     form = TodoListElement._generateTaskFormFields(form, existingTaskId);
@@ -134,7 +142,10 @@ export class TodoListElement {
 
     // if add form open close that thing up.
     document.querySelector("#display-ask-form-button").classList.remove("no-display");
-    document.querySelector("#add-task-form").remove();
+    let addForm = document.querySelector("#add-task-form");
+    if (addForm != null) {
+      document.querySelector("#add-task-form").remove();
+    }
   }
 
 
@@ -145,7 +156,7 @@ export class TodoListElement {
   static addTaskForm() {
     // Enumerate through the properties of a Task object, and then use that
     // to create inputs based on the type.
-    const form = document.createElement("form");
+    let form = document.createElement("form");
     form.id = "add-task-form";
 
     form = TodoListElement._generateTaskFormFields(form);
@@ -223,7 +234,7 @@ export class TodoListElement {
     let editButton = c.button("Edit", "task-view-edit-button");
 
     finishButton.addEventListener("click", TodoListElement._completeTask);
-    editButton.addEventListener("edit", TodoListElement._editTask);
+    editButton.addEventListener("click", TodoListElement._editTaskForm);
 
     taskView.append(header, priority, description, createDate, dueDate);
     if (task.completed) {
