@@ -1,3 +1,16 @@
+.no-display {
+  display: none;
+}
+
+#header {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  height: 5vh;
+  padding-left: 15px;
+  padding-top: 5px;
+}
+
 #prompt-wrapper {
   background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
@@ -30,4 +43,49 @@
 
 .task > div {
   border: 1px solid black;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 90vh;
+}
+
+.sidebar {
+  border: 1px solid red;
+  width: 300px;
+  max-width: 300px;
+  transition: max-width 0.5s !important;
+}
+
+.hide-sidebar {
+  max-width: 0 !important;
+  overflow: hidden;
+}
+
+.sidebar::before {
+  content: "SIDEBAR";
+  font-size: 30px;
+  color: red;
+}
+
+#menu-toggle-button {
+  position: relative;
+  cursor: pointer;
+}
+
+/* not working, debug this l8r */
+#menu-toggle-button::before {
+  position: relative;
+  top: 5px;
+  left: 25px;
+  content: "Toggle Menu";
+  font-size: 25px;
+  color : red;
+  border: 1px solid black;
+}
+
+.footer {
+  text-align: center;
 }

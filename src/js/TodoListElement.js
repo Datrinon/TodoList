@@ -423,6 +423,9 @@ export class TodoListElement {
 // 6. The ability to drag and reorder tasks.
 //7. The ability to delete tasks. 
 8. Time to add the sidebar.
+Work on the media query for it on 82 of index.js
+
+
 9. A global class containing constants 
 referring to IDs associated with the GUI 
 elements.

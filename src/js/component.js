@@ -24,12 +24,14 @@ export class Component {
   initializeStructure(headerTitle, emptyHeader = false) {
     const body = document.body;
     const mainWrapper = this.div("content");
-    const header;
+    let header;
     if (emptyHeader) {
       header = document.createElement("header");
     } else {
       header = this.header(headerTitle);
     }
+    header.id = "header";
+
     const main = document.createElement("main");
     const footer = this.footer();
     main.classList.add("main");
@@ -102,22 +104,26 @@ export class Component {
 
       linkButton.classList.add("navbar-button");
       
+      linkAnchor.id = `navlink-${link.toLowerCase()}`;
       linkAnchor.textContent = link;
       linkAnchor.setAttribute("href", "#");
 
       linkButton.append(linkAnchor);
       linkContainer.append(linkButton);
 
-      linkAnchor.addEventListener("click", (e) => {
-        let currentSectionId = document.querySelector(".main > section:not(.no-display)").id.toLowerCase();
-        let chosenSectionId = e.currentTarget.textContent.toLowerCase();
+      
 
-        if (currentSectionId !== chosenSectionId) {
-          document.querySelector(`#${currentSectionId}`).classList.add("no-display");
-          document.querySelector(`#${chosenSectionId}`).classList.remove("no-display");
-        }
+      // Too specific.
+      // linkAnchor.addEventListener("click", (e) => {
+      //   let currentSectionId = document.querySelector(".main > section:not(.no-display)").id.toLowerCase();
+      //   let chosenSectionId = e.currentTarget.textContent.toLowerCase();
 
-      });
+      //   if (currentSectionId !== chosenSectionId) {
+      //     document.querySelector(`#${currentSectionId}`).classList.add("no-display");
+      //     document.querySelector(`#${chosenSectionId}`).classList.remove("no-display");
+      //   }
+
+      // });
     }
 
     nav.append(linkContainer);
