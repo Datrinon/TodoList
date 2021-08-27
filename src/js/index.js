@@ -23,7 +23,14 @@ const c = new Component();
 
 function toggleSideBar(e) {
   console.log("ello");
-  document.querySelector(".sidebar").classList.toggle("hide-sidebar");
+  let sidebar = document.querySelector(".sidebar");
+  let sidebarWrapper = document.querySelector(".sidebar-wrapper");
+  sidebar.classList.toggle("hide-sidebar");
+  if (!sidebar.classList.contains("hide-sidebar")) {
+    sidebarWrapper.classList.add("sidebar-active-wrapper-bg");
+  } else {
+    sidebarWrapper.classList.remove("sidebar-active-wrapper-bg");
+  }
 }
 
 /**
@@ -35,8 +42,11 @@ function toggleSideBar(e) {
   const [header, main, footer] = [...c.initializeStructure("To-Do List", true)];
 
   // header elements
+  let menuButton = c.button("", "navbar-button");
+  menuButton.id = "menu-toggle-button";
   let menuIcon = c.faIcon("fas", "fa-bars");
-  menuIcon.id = "menu-toggle-button";
+  menuButton.append(menuIcon);
+
   let pageLogo = c.heading("To-Do List", 1);
   let searchBar = c.div("search-bar");
   let searchField = document.createElement("input");
@@ -46,10 +56,12 @@ function toggleSideBar(e) {
 
   let navBar = c.navbar("My Account");
 
-  header.append(menuIcon, pageLogo, searchBar, navBar);
+  header.append(menuButton, pageLogo, searchBar, navBar);
 
   // sidebar
+  let sideBarWrapper = c.div("sidebar-wrapper");
   let sideBar = c.div("sidebar");
+  sideBarWrapper.append(sideBar);
 
   // Begin Main Content (Task) Section
   const taskMasterSection = c.section("tasks-area");
@@ -66,7 +78,7 @@ function toggleSideBar(e) {
   completedTasksList.append(completedLabel);
 
   taskMasterSection.append(activeTaskList, addForm, completedTasksList);
-  main.append(sideBar,taskMasterSection);
+  main.append(sideBarWrapper,taskMasterSection);
 
   let initialTasks = connection.getAllItems();
 
@@ -77,9 +89,10 @@ function toggleSideBar(e) {
   }
 
   window.addEventListener("load", () => {
-    document.querySelector(`#${menuIcon.id}`).addEventListener("click", toggleSideBar);
+    
+    document.querySelector(`#${menuButton.id}`).addEventListener("click", toggleSideBar);
 
-    let mql = window.matchMedia('(max-width: 900px)');
+    let mql = window.matchMedia('(max-width: 700px)');
     mql.addEventListener("change", (e) => {
       if (e.matches) {
         document.querySelector(".sidebar").classList.add("hide-sidebar");
@@ -89,6 +102,7 @@ function toggleSideBar(e) {
         document.querySelector(".sidebar").classList.remove("hide-sidebar");
       }
     })
+    console.log("window object: document loaded.");
   });
 })();
 

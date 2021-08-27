@@ -38,7 +38,7 @@
   max-width: 400px;
   margin: 0 auto;
   display: block;
-  z-index: 2
+  z-index: 10;
 }
 
 .task > div {
@@ -57,6 +57,7 @@
   width: 300px;
   max-width: 300px;
   transition: max-width 0.5s !important;
+  background-color: white;
 }
 
 .hide-sidebar {
@@ -88,4 +89,29 @@
 
 .footer {
   text-align: center;
+}
+
+@media (max-width: 700px) {
+  /* Apply new style of sidebar */
+  /* One, in which, the sidebar overlays the tasks. */
+  /* Is that even a flex display anymore? */
+  /* > no */
+  .main {
+    display: unset;
+  }
+
+  .sidebar {
+    position: fixed;
+    z-index: 2;
+    height: 90vh;
+    width: 100vw;
+  }
+
+  .sidebar-active-wrapper-bg {
+    width: 100vw;
+    height: 90vh;
+    position: fixed;
+    background-color:rgba(0,0,0,0.7);
+  }
+
 }
