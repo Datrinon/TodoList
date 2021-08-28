@@ -27,6 +27,11 @@ export class TodoListElement {
     addTask.append(c.span("Click here to add task..."));
 
     addTask.addEventListener("click", (e) => {
+      let editForm = document.querySelector("#edit-task-form");
+      if (editForm !== null) {
+        editForm.remove();
+      }
+      
       e.currentTarget.parentNode.append(TodoListElement.addTaskForm());
 
       let catInput = document.querySelector("#task-categories");
@@ -92,7 +97,7 @@ export class TodoListElement {
         }
       });
 
-      // categoryField[1].value = task // TODO fill out category field
+      categoryField[1].value = task.categories;
       descriptionField[1].value = task.description;
       dueDateField[1].value = task.dueDate;
     }
@@ -203,9 +208,9 @@ export class TodoListElement {
     taskView.querySelector(".task-view-description").textContent = task.description;
     taskView.querySelector(".task-view-create-date").textContent = format(task.id, "'Added' MM/dd/yyyy");
     taskView.querySelector(".task-view-due-date").textContent = task.dueDate;
-    // TODO add category field
-    // TODO fix due date field
-    // TODO show task updated message somewhere.    
+    taskView.querySelector(".task-view-categories").textContent = task.categories;
+    // TODO show task updated message somewhere.
+    c.toast("Task updated successfully", 3);
     console.log("Task updated successfully.");
     // remove the form after we've finished using it.
     taskView.querySelector("#edit-task-form").remove();
@@ -231,8 +236,6 @@ export class TodoListElement {
     task.priority = document.querySelector("#task-priority").value;
     task.description = document.querySelector("#task-description").value;
     task.dueDate = document.querySelector("#task-dueDate").value;
-    // TODO change the categories input later right here because it's going to be like 
-    // a tag implementation instead of just a simple text field.
     task.categories = document.querySelector("#task-categories").value;
 
     return task;
@@ -240,10 +243,14 @@ export class TodoListElement {
 
 
   static _closeForm(e) {
-    let id = e.currentTarget.parentNode.id;
-    e.currentTarget.parentNode.remove();
+    let elem = e.currentTarget;
+    while (!elem.id.includes("task-form")) {
+      elem = elem.parentNode;
+    }
 
-    //document.querySelector("#add-task-form").remove();
+    let id = elem.id;
+    elem.remove();
+    // display the button again if the form being closed is the add-task-form.
     if (id === "add-task-form") {
       document.querySelector("#display-ask-form-button").classList.remove("no-display");
     } 
@@ -262,8 +269,9 @@ export class TodoListElement {
     let dueDate = c.paragraph(task.dueDate, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
     let priority = c.paragraph(task.priority, "task-view-priority");
     let description = c.paragraph(task.description, "task-view-description");
+    let categories = c.paragraph(task.categories, "task-view-categories");
 
-    taskInformationArea.append(header, createDate, dueDate, priority, description);
+    taskInformationArea.append(header, createDate, dueDate, priority, description, categories);
     
     let finishButton = c.button("", "task-view-finish-button");
     let finishIcon = c.faIcon("fas", "fa-check-square");

@@ -111,7 +111,7 @@ export class Component {
       linkButton.append(linkAnchor);
       linkContainer.append(linkButton);
 
-      
+
 
       // Too specific.
       // linkAnchor.addEventListener("click", (e) => {
@@ -382,5 +382,33 @@ export class Component {
       // styling moved to .css page.
 
       return modalWrapper;
+  }
+
+  toast(textContent, duration) {
+    let toastBox = document.createElement("div");
+    let toastMessage = document.createElement("paragraph");
+    toastBox.classList.add("toast");
+    toastMessage.textContent = textContent;
+    toastMessage.classList.add("toast-message");
+
+    toastBox.append(toastMessage);
+
+    let toastBoxCss = "position: fixed; bottom: 10vh;";
+    toastBoxCss += "width: 100vw;"
+    toastBoxCss += `animation: fade-in-out ${duration}s;`;
+    toastBoxCss += "z-index: 9999;"
+
+    let toastMessageCss = "margin: 0 auto; width: 300px; display: block; background-color: grey;"
+    toastMessageCss += "text-align: center; border: 1px solid black; border-radius: 5px;"
+    toastMessageCss += "color: white;"
+    
+    toastBox.style.cssText = toastBoxCss;
+    toastMessage.style.cssText = toastMessageCss;
+
+    toastBox.addEventListener("animationend", () => {
+      toastBox.remove();
+    });
+
+    document.body.append(toastBox);
   }
 }

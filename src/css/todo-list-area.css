@@ -2,7 +2,7 @@
   max-width: 600px;
 }
 
-#add-task-form {
+#add-task-form, #edit-task-form {
   display: grid;
   grid-template-rows: 1fr 3fr 1fr;
   grid-template-columns: 2fr 1fr 1fr;
@@ -44,6 +44,22 @@ form > [class^="container-task"] > *{
 }
 
 #task-description {
-  resize: vertical;
+  resize: none;
   width: 100%;
+  height: 100%;
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
