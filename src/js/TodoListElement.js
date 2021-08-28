@@ -1,3 +1,4 @@
+import Tagify from '@yaireo/tagify';
 import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 import {Component} from "./component.js";
 import {Task} from "./task.js";
@@ -27,6 +28,10 @@ export class TodoListElement {
 
     addTask.addEventListener("click", (e) => {
       e.currentTarget.parentNode.append(TodoListElement.addTaskForm());
+
+      let catInput = document.querySelector("#task-categories");
+      new Tagify(catInput);
+
       addTask.classList.add("no-display");
     });
 
@@ -134,8 +139,13 @@ export class TodoListElement {
   }
 
   static _displayEditTaskForm(e) {
+    let elem = e.currentTarget; 
+    while(!elem.id.includes("task-")) {
+      elem = elem.parentNode;
+    }
+
     // pop up an edit form that looks like the addtask form.
-    let existingTaskId = +e.currentTarget.parentNode.id.split("task-")[1];
+    let existingTaskId = +elem.id.split("task-")[1];
 
     let form = document.createElement("form");
     form.id = "edit-task-form";
@@ -158,6 +168,9 @@ export class TodoListElement {
     form = TodoListElement._generateTaskFormButtons(form, existingTaskId);
 
     e.currentTarget.parentNode.append(form);
+
+    let catInput = document.querySelector("#task-categories");
+    new Tagify(catInput);
   }
 
 
@@ -427,10 +440,12 @@ export class TodoListElement {
 // 4. Complete Button
 // 5. The ability to modify tasks.
 // 6. The ability to drag and reorder tasks.
-//7. The ability to delete tasks. 
+// 7. The ability to delete tasks. 
 // 8. Time to add the sidebar.
-09. The add form css, looks hella despicable
+// 9. The add form css, basic css.
 10. Category input
+- Use library tagify
+
 11. Search bar (search title and description, show relevant results).
 12. Straighten up the navbar.
 Work on the media query for it on 82 of index.js

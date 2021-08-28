@@ -14,6 +14,7 @@ import '../css/sticky-footer.css';
 import '../css/index.css';
 import '../css/draggable.css';
 import '../css/todo-list-area.css';
+import '@yaireo/tagify/dist/tagify.css';
 
 import {Component} from "./component.js";
 import {TodoListElement} from "./TodoListElement.js";
@@ -115,6 +116,7 @@ function queryPageWidth(e) {
     }
 
     mql.addEventListener("change", queryPageWidth);
-  });
+    
+  }); 
 })();
 

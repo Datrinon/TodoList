@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@yaireo/tagify": "^4.7.2",
     "date-fns": "^2.23.0"
   }
 }
