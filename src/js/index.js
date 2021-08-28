@@ -13,6 +13,7 @@ import '../css/sticky-footer.css';
 // import '../css/responsive-header.css';
 import '../css/index.css';
 import '../css/draggable.css';
+import '../css/todo-list-area.css';
 
 import {Component} from "./component.js";
 import {TodoListElement} from "./TodoListElement.js";
@@ -22,7 +23,7 @@ const c = new Component();
 
 
 function toggleSideBar(e) {
-  console.log("ello");
+  console.log("Sidebar: Sidebar toggling...");
   let sidebar = document.querySelector(".sidebar");
   let sidebarWrapper = document.querySelector(".sidebar-wrapper");
   sidebar.classList.toggle("hide-sidebar");
@@ -30,6 +31,16 @@ function toggleSideBar(e) {
     sidebarWrapper.classList.add("sidebar-active-wrapper-bg");
   } else {
     sidebarWrapper.classList.remove("sidebar-active-wrapper-bg");
+  }
+}
+
+function queryPageWidth(e) {
+  if (e.matches) {
+    document.querySelector(".sidebar").classList.add("hide-sidebar");
+    document.querySelector(".sidebar-wrapper").classList.remove("sidebar-active-wrapper-bg");
+  } else {
+    // it bigger than the query rule.
+    document.querySelector(".sidebar").classList.remove("hide-sidebar");
   }
 }
 
@@ -88,21 +99,22 @@ function toggleSideBar(e) {
     }
   }
 
-  window.addEventListener("load", () => {
+  window.addEventListener("load", (e) => {
     
     document.querySelector(`#${menuButton.id}`).addEventListener("click", toggleSideBar);
 
     let mql = window.matchMedia('(max-width: 700px)');
-    mql.addEventListener("change", (e) => {
-      if (e.matches) {
-        document.querySelector(".sidebar").classList.add("hide-sidebar");
-        // TODO Change the schema of the sidebar to overlay the rest of the page,
-      } else {
-        // it bigger than the query rule.
-        document.querySelector(".sidebar").classList.remove("hide-sidebar");
-      }
-    })
-    console.log("window object: document loaded.");
+    // matchMedia is part of CSS Object Model, like we have Document Object Model
+    // matchMedia returns a mediaquerylist representing the media query string.
+    // .matches returns whether or not the state of the document matches the given query rule.
+    if (mql.matches) {
+      document.querySelector(".sidebar").classList.add("hide-sidebar");
+      document.querySelector(".sidebar-wrapper").classList.remove("sidebar-active-wrapper-bg");
+    } else {
+      document.querySelector(".sidebar").classList.remove("hide-sidebar");
+    }
+
+    mql.addEventListener("change", queryPageWidth);
   });
 })();
 

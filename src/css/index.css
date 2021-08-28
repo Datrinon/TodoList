@@ -54,6 +54,7 @@
 
 .sidebar {
   border: 1px solid red;
+  height: 90vh;
   width: 300px;
   max-width: 300px;
   transition: max-width 0.5s !important;
@@ -77,12 +78,12 @@
 }
 
 /* not working, debug this l8r */
-#menu-toggle-button::before {
-  position: relative;
-  top: 5px;
-  left: 25px;
+#menu-toggle-button:hover::before {
+  position: absolute;
+  top: 25px;
+  left: 5px;
   content: "Toggle Menu";
-  font-size: 25px;
+  font-size: 15px;
   color : red;
   border: 1px solid black;
 }

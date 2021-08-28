@@ -70,8 +70,10 @@ export class TodoListElement {
         dueDateField, categoryField];
 
     for (let field of allFields) {
+      let div = c.div(`container-${field[1].id}`);
+      div.append(field[0], field[1]);
       // add label and the input element of each field.
-      form.append(field[0], field[1]);
+      form.append(div);
     }
 
     if (existingTaskId !== null) {
@@ -97,9 +99,12 @@ export class TodoListElement {
   static _generateTaskFormButtons(form, existingTaskId = null) {
     let okButton;
     let cancelButton;
+    let buttonSection;
 
-    okButton = c.button("Create Task");
-    cancelButton = c.button("Close");
+    buttonSection = c.div("form-buttons");
+
+    okButton = c.button("Create Task", "form-button");
+    cancelButton = c.button("Close", "form-button");
 
     okButton.setAttribute("type", "button");
     okButton.setAttribute("disabled", "");
@@ -122,7 +127,8 @@ export class TodoListElement {
       });
     }
     
-    form.append(okButton, cancelButton);
+    buttonSection.append(okButton, cancelButton);
+    form.append(buttonSection);
 
     return form;
   }
@@ -422,7 +428,11 @@ export class TodoListElement {
 // 5. The ability to modify tasks.
 // 6. The ability to drag and reorder tasks.
 //7. The ability to delete tasks. 
-8. Time to add the sidebar.
+// 8. Time to add the sidebar.
+09. The add form css, looks hella despicable
+10. Category input
+11. Search bar (search title and description, show relevant results).
+12. Straighten up the navbar.
 Work on the media query for it on 82 of index.js
 
 
