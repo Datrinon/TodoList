@@ -236,7 +236,10 @@ export class TodoListElement {
     task.priority = document.querySelector("#task-priority").value;
     task.description = document.querySelector("#task-description").value;
     task.dueDate = document.querySelector("#task-dueDate").value;
-    task.categories = document.querySelector("#task-categories").value;
+    
+    let categories = document.querySelector("#task-categories").value;
+    categories = ([...new Set(categories)])
+    task.categories = categories;
 
     return task;
   }
@@ -451,10 +454,17 @@ export class TodoListElement {
 // 7. The ability to delete tasks. 
 // 8. Time to add the sidebar.
 // 9. The add form css, basic css.
-10. Category input
-- Use library tagify
+// 10. Category input
+//- Use library tagify
+11. Sidebar has the following roles:
+- Today
+- This week
+- Categories:
+  > Categories Listed
+- Completed
+11-2. Move sidebar into a separate class
+- Class name, PageElement.js
 
-11. Search bar (search title and description, show relevant results).
 12. Straighten up the navbar.
 Work on the media query for it on 82 of index.js
 

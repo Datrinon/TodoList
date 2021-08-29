@@ -366,12 +366,6 @@ export class Component {
         };
       }
 
-      // prevent events from being fired underneath the modal.
-      // modalWrapper.addEventListener("click", (e) => e.stopPropagation(), 
-      // {
-      //   capture: true
-      // });
-
       positiveButton.addEventListener("click", positiveCallback);
       negativeButton.addEventListener("click", negativeCallback);
 
