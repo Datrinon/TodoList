@@ -23,16 +23,8 @@ import {TodoListSidebar} from "./TodoListSidebar.js";
 
 const c = new Component();
 
-
-/**
- * Called upon load. Initializes general GUI elements, like the header,
- * navbar, controls, etc.
- */
-(function loadGUI() {
-
-  const [header, main, footer] = [...c.initializeStructure("To-Do List", true)];
-
-  // header elements
+function loadHeader(header) {
+  
   let menuButton;
   let menuIcon;
   let logoMenuDiv;
@@ -53,8 +45,11 @@ const c = new Component();
   navBar = c.navbar("My Account");
 
   header.append(logoMenuDiv, navBar);
-  // End Header Section 
 
+  return header;
+}
+
+function loadMain(main, sidebar) {
   // Begin Main Content (Task) Section
   const taskMasterSection = c.section("tasks-area");
   const activeTaskList = c.section("tasks-active");
@@ -74,12 +69,10 @@ const c = new Component();
 
   // Sidebar Section
   // Sidebar
-  const sidebarManager = new TodoListSidebar();
   // End Sidebar section
 
   // Append the major sections.
-  main.append(sidebarManager.getSidebar(), taskMasterSection);
-
+  main.append(sidebar.getSidebar(), taskMasterSection);
 
   // Begin Task-related stuffs (loading tasks and sidebar population.)
   let initialTasks = connection.getAllItems();
@@ -90,17 +83,33 @@ const c = new Component();
     }
   }
 
-  window.addEventListener("load", (e) => {
-    
-    document.querySelector(`#${menuButton.id}`)
-        .addEventListener("click", TodoListSidebar.toggleSidebar);
+  return main;
+}
 
-    sidebarManager.mql = 700;
+function onDocumentReady(sidebarManager) {
+  document.querySelector("#menu-toggle-button").addEventListener("click", TodoListSidebar.toggleSidebar);
 
-    TodoListSidebar.queryPageWidth(sidebarManager.mql);
+  sidebarManager.mql = 700;
 
-    sidebarManager.mql.addEventListener("change",  TodoListSidebar.queryPageWidth);
-    
-  }); 
+  TodoListSidebar.queryPageWidth(sidebarManager.mql);
+
+  sidebarManager.mql.addEventListener("change",  TodoListSidebar.queryPageWidth);
+}
+
+/**
+ * Called upon load. Initializes general GUI elements, like the header,
+ * navbar, controls, etc.
+ */
+(function loadGUI() {
+
+  let [header, main, footer] = [...c.initializeStructure("To-Do List", true)];
+  const sidebarManager = new TodoListSidebar();
+
+  // header elements
+  header = loadHeader(header);
+  main = loadMain(main, sidebarManager);
+  // End Header Section 
+
+  window.addEventListener("load", () => onDocumentReady(sidebarManager)); 
 })();
 
