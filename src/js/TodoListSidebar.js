@@ -1,5 +1,6 @@
-import connection from "./TodoListConnection.js";
+import connection from "./TodoListStorage.js";
 import {Component} from "./component.js";
+import {TodoListElement} from "./TodoListElement.js";
 
 export class TodoListSidebar {
   
@@ -9,6 +10,36 @@ export class TodoListSidebar {
   #sidebarContainer;
   #sidebarContent;
   #sidebarCategoryContainer;
+  #sidebarLinks = {
+    all: {
+      displayLabel: "All",
+      type: "attribute"
+    }, 
+    today: {
+      displayLabel: "Today",
+      type: "date"
+    }, 
+    week: {
+      displayLabel: "Next 7 days",
+      type: "date"
+    },
+    month: {
+      displayLabel: "This Month",
+      type: "date"
+    },
+    nodate: {
+      displayLabel: "No Due Date",
+      type: "attribute"
+    },
+    category: {
+      displayLabel: "By Category",
+      type: "category"
+    },
+    completed: {
+      displayLabel: "Completed",
+      type: "attribute"
+    }
+  };
   
   constructor() {
     this.#c = new Component();
@@ -35,37 +66,39 @@ export class TodoListSidebar {
 
   #loadSideBar() {
     let sideBarLinksContainer = document.createElement("ul");
-    let sideBarLinks = ["All", "Today", "This Week", "Categories", "No Due Date", "Completed"];
     
-    for (let link of sideBarLinks) {
-      let linkUl = document.createElement("li");
-      let button = this.#c.button(link);
-      let linkId = link.replace(" ", "-").toLowerCase();
+    for (let link in this.#sidebarLinks) {
+      let linkUl;
+      let linkId;
+      let linkButton;
+
+      linkUl = document.createElement("li");
+      linkButton = this.#c.button(this.#sidebarLinks[link].displayLabel);
+      linkId = `nav-link-${link}`;
       
-      linkId = `nav-link-${linkId}`;
       linkUl.id = linkId;
       linkUl.classList.add("task-type-nav-link");
-      //linkUl.textContent = link;
-      linkUl.append(button);
+
+      if (link !== "category") { // skip category handler addition, will be done elsewhere.
+        linkUl.addEventListener("click", () => TodoListElement.filterTasks(link, type));
+      }
+
+      linkUl.append(linkButton);
   
       sideBarLinksContainer.append(linkUl);
 
-      if (linkId.includes("categor")) {
+      // save category id element reference, so that we can update its categories later.
+      if (link === "category") {
         this.#sidebarCategoryContainer = linkUl;
       }
     }
   
     this.#sidebarContent.append(sideBarLinksContainer);
   
-    // document.querySelector(".sidebar").append(sideBarNav);
-    
-    // now add in the categories. 
-    // This is a method because we want to call this each time a task is added / updated.
-    // We need to update the categories...
-    this.updateCategoriesOnSidebar();
+    this.updateCategorySidebarListing();
   }
 
-  updateCategoriesOnSidebar() {
+  updateCategorySidebarListing() {
     this.#sidebarCategoryContainer.append(this.#getCategoriesAsLinks());
   }
 
@@ -92,9 +125,9 @@ export class TodoListSidebar {
   }
 
   /**
-   * Check the categories listed for each task, and then return a navbar with 
-   * the categories. Ideally, run this function each time you submit or update
-   * a task.
+   * Check the categories listed for each task, and then return a navbar elem with 
+   * the categories as list elements.
+   * Ideally, run this function each time you submit or update a task.
    * 
    * @returns links - An array of links pertaining to all relevant categories, 
    * and the count of tasks in each category. Add this after the category
@@ -106,7 +139,7 @@ export class TodoListSidebar {
       if (task.categories.length === 0) {
         return cats;
       }
-      let taskCategories = JSON.parse(task.categories).map(elem => elem.value);
+      let taskCategories = task.categories.map(elem => elem.value);
       // need to convert task.categories into an array.
       for (let cat of taskCategories) {
         cat = cat.replace(" ", "-").toLowerCase();
@@ -124,13 +157,18 @@ export class TodoListSidebar {
     catContainer.id = "category-links";
   
     for (let cat in categories) {
-      let catLink = document.createElement('li');
+      let catListItem = document.createElement('li');
+      let catLink = document.createElement("button");
       catLink.textContent = cat.replace("-", ' ');
       catLink.textContent += ` (${categories[cat]})`;
   
+      //TODO
+      // Add filter tasks callback over here.
       catLink.classList.add("category-nav-link");
+      catLink.addEventListener("click", TodoListElement.filterTasks(cat, "category"))
   
-      catContainer.append(catLink);
+      catListItem.append(catLink);
+      catContainer.append(catListItem);
     }
   
     return catContainer;

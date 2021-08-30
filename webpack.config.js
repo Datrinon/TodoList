@@ -11,7 +11,7 @@ module.exports = {
     component: './src/js/component.js',
     task: './src/js/task.js',
     priority: "./src/js/priority.js",
-    connection: "./src/js/TodoListConnection.js",
+    storage: "./src/js/TodoListStorage.js",
     element: "./src/js/TodoListElement.js"
   },
   devtool: 'inline-source-map',

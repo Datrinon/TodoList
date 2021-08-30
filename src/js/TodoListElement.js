@@ -1,9 +1,9 @@
 import Tagify from '@yaireo/tagify';
-import { format, formatDistance, formatRelative, subDays } from 'date-fns'
+import { compareAsc, format, formatDistance, formatRelative, subDays } from 'date-fns'
 import {Component} from "./component.js";
 import {Task} from "./task.js";
 import priority from "./priority.js";
-import connection from "./TodoListConnection.js";
+import connection from "./TodoListStorage.js";
 const c = new Component();
 
 /**
@@ -209,7 +209,6 @@ export class TodoListElement {
     taskView.querySelector(".task-view-create-date").textContent = format(task.id, "'Added' MM/dd/yyyy");
     taskView.querySelector(".task-view-due-date").textContent = task.dueDate;
     taskView.querySelector(".task-view-categories").textContent = task.categories;
-    // TODO show task updated message somewhere.
     c.toast("Task updated successfully", 3);
     console.log("Task updated successfully.");
     // remove the form after we've finished using it.
@@ -276,6 +275,8 @@ export class TodoListElement {
 
     taskInformationArea.append(header, createDate, dueDate, priority, description, categories);
     
+    // Controls Section Begin
+
     let finishButton = c.button("", "task-view-finish-button");
     let finishIcon = c.faIcon("fas", "fa-check-square");
     finishButton.append(finishIcon, "Finish");
@@ -289,6 +290,8 @@ export class TodoListElement {
     deleteButton.append(deleteIcon, "Delete");
 
     taskControlArea.append(finishButton, editButton, deleteButton);
+
+    // Controls Section End
 
     finishButton.addEventListener("click", TodoListElement._completeTask);
     editButton.addEventListener("click", TodoListElement._displayEditTaskForm);
@@ -420,8 +423,7 @@ export class TodoListElement {
       // remove the task from the storage.
       connection.remove(taskId);
 
-      console.log("Task deleted successfully.");
-      document.querySelector("#prompt-wrapper").remove();
+      c.toast("Task deleted successfully.", 3);
     }
 
     let removePrompt = c.confirmModal(
@@ -437,45 +439,55 @@ export class TodoListElement {
     document.querySelector(".content").append(removePrompt);
   }
 
+  static filterTasks(filterName, type) {
+    let items;
+    let condition;
+
+    if (filterName !== "completed") {
+    }
+
+    switch (type) {
+      case "attribute":
+        if (filterName === "all") {
+          condition = (elem) => true;
+        } else if (filterName === "nodate") {
+          condition = (elem) => (elem.dueDate === null); 
+        } else if (filterName === "completed") {
+          condition = (elem) => (elem.completed === true);
+        }
+        break;
+      case "date":
+        if (filterName === "today") {
+          condition = (elem) => (compareAsc(new Date(), elem.dueDate) === 0);
+        } else if (filterName === "week") {
+          condition = (elem) => (compareAsc(addDays(new Date(), 7), elem.dueDate) === 1);
+        } else if (filterName === "month") {
+          condition = (elem) => (getMonth(new Date()) === getMonth(elem.dueDate));
+        }
+        break;
+      case "category":
+        condition = (elem) => elem.categories.includes(filterName);
+        break;
+    }
+
+    if (filterName !== "completed") {
+      items = connection.getAllItems()
+      .filter(elem => elem.completed === false)
+      .filter(condition);
+    } else {
+      items = connection.getAllItems().filter(condition);
+    }
+
+    console.log(items);
+  }
+
+  /**
+   * Update the task view with given tasks.
+   */
+  static updateTaskView(tasks) {
+
+  }
+
 }
 
 
-// TODO LIST
-/*
-// 1. Build the add form for the note list.
-//   a. Use the enumerable properties to determine the type of input to be added.
-//   b. Use the components library to generate an input and label.
-//   c. return a form from addTaskForm
-// 2. Work on the C(reate) part of the app.
-// 3. Local Storage
-// 4. Complete Button
-// 5. The ability to modify tasks.
-// 6. The ability to drag and reorder tasks.
-// 7. The ability to delete tasks. 
-// 8. Time to add the sidebar.
-// 9. The add form css, basic css.
-// 10. Category input
-//- Use library tagify
-11. Sidebar has the following roles:
-- Today
-- This week
-- Categories:
-  > Categories Listed
-- Completed
-11-2. Move sidebar into a separate class
-- Class name, PageElement.js
-
-12. Straighten up the navbar.
-Work on the media query for it on 82 of index.js
-
-
-9. A global class containing constants 
-referring to IDs associated with the GUI 
-elements.
-
-
-Backburner:
-- Categories
-- Navbar area
-- UI
-*/

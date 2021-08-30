@@ -346,6 +346,20 @@ export class Component {
     return [label, ta];
   }
 
+  /**
+   * Create a confirm modal.
+   * 
+   * @param {*} className - Classes the modal should belong to.
+   * @param {*} title - The title appearing on the modal.
+   * @param {*} message - The message appearing on the modal.
+   * @param {*} positiveButtonLabel - Text for the OK button.
+   * @param {*} negativeButtonLabel - Text for the cancel button.
+   * @param {*} positiveCallback - Function to run if OK is pressed.
+   * @param {*} negativeCallback - Function to run if cancel is pressed. 'null' by
+   * default, which then just closes the modal.
+   * 
+   * @returns - Returns the generated modal element.
+   */
   confirmModal(className, title, message, positiveButtonLabel,
     negativeButtonLabel, positiveCallback, negativeCallback = null) {
       let modalWrapper = this.div();
@@ -366,7 +380,11 @@ export class Component {
         };
       }
 
-      positiveButton.addEventListener("click", positiveCallback);
+      // positiveButton.addEventListener("click", positiveCallback);
+      positiveButton.addEventListener("click", (e) => {
+        positiveCallback(e);
+        modalWrapper.remove();
+      })
       negativeButton.addEventListener("click", negativeCallback);
 
       buttonSection.append(positiveButton, negativeButton);
@@ -378,6 +396,12 @@ export class Component {
       return modalWrapper;
   }
 
+
+  /**
+   * Display a brief, unobtrusive pop-up message at the bottom of the screen.
+   * @param {*} textContent - The text the message should display.
+   * @param {*} duration - The duration of the message in seconds.
+   */
   toast(textContent, duration) {
     let toastBox = document.createElement("div");
     let toastMessage = document.createElement("paragraph");

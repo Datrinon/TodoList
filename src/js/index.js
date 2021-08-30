@@ -1,7 +1,7 @@
 /**
  * Index.js - The main controller of the to-do app. Assigns event handlers.
  * Author: dht
- * Date: 23 August 2021
+ * Create Date: 23 August 2021
  */
  "use strict"
 
@@ -18,83 +18,10 @@ import '@yaireo/tagify/dist/tagify.css';
 
 import {Component} from "./component.js";
 import {TodoListElement} from "./TodoListElement.js";
-import connection from "./TodoListConnection.js";
+import connection from "./TodoListStorage.js";
 import {TodoListSidebar} from "./TodoListSidebar.js";
 
 const c = new Component();
-
-function loadHeader(header) {
-  
-  let menuButton;
-  let menuIcon;
-  let logoMenuDiv;
-  let pageLogo;
-  let navBar;
-
-  menuButton = c.button("", "navbar-button");
-  menuButton.id = "menu-toggle-button";
-  
-  menuIcon = c.faIcon("fas", "fa-bars");
-  menuButton.append(menuIcon);
-
-  logoMenuDiv = c.div("logo-menu");
-  pageLogo = c.heading("To-Do List", 1);
-  
-  logoMenuDiv.append(menuButton, pageLogo);
-  
-  navBar = c.navbar("My Account");
-
-  header.append(logoMenuDiv, navBar);
-
-  return header;
-}
-
-function loadMain(main, sidebar) {
-  // Begin Main Content (Task) Section
-  const taskMasterSection = c.section("tasks-area");
-  const activeTaskList = c.section("tasks-active");
-  const addForm = c.section("tasks-add");
-  const completedTasksList = c.section("tasks-completed");
-  const addTaskButton = TodoListElement.addTaskButton();
-
-  addForm.append(addTaskButton);
-
-  const activeLabel = c.heading("Active", 2, "task-section-header");
-  const completedLabel = c.heading("Completed", 2, "task-section-header");
-  activeTaskList.append(activeLabel);
-  completedTasksList.append(completedLabel);
-
-  taskMasterSection.append(activeTaskList, addForm, completedTasksList);  
-  // End Main Content Section
-
-  // Sidebar Section
-  // Sidebar
-  // End Sidebar section
-
-  // Append the major sections.
-  main.append(sidebar.getSidebar(), taskMasterSection);
-
-  // Begin Task-related stuffs (loading tasks and sidebar population.)
-  let initialTasks = connection.getAllItems();
-
-  if (initialTasks !== null) {
-    for (let item of initialTasks) {
-      TodoListElement.addTaskToView(item, "#tasks-active");
-    }
-  }
-
-  return main;
-}
-
-function onDocumentReady(sidebarManager) {
-  document.querySelector("#menu-toggle-button").addEventListener("click", TodoListSidebar.toggleSidebar);
-
-  sidebarManager.mql = 700;
-
-  TodoListSidebar.queryPageWidth(sidebarManager.mql);
-
-  sidebarManager.mql.addEventListener("change",  TodoListSidebar.queryPageWidth);
-}
 
 /**
  * Called upon load. Initializes general GUI elements, like the header,
@@ -102,14 +29,119 @@ function onDocumentReady(sidebarManager) {
  */
 (function loadGUI() {
 
+  function loadHeader(header) {
+  
+    let menuButton;
+    let menuIcon;
+    let logoMenuDiv;
+    let pageLogo;
+    let navBar;
+  
+    menuButton = c.button("", "navbar-button");
+    menuButton.id = "menu-toggle-button";
+    
+    menuIcon = c.faIcon("fas", "fa-bars");
+    menuButton.append(menuIcon);
+  
+    logoMenuDiv = c.div("logo-menu");
+    pageLogo = c.heading("To-Do List", 1);
+    
+    logoMenuDiv.append(menuButton, pageLogo);
+    
+    navBar = c.navbar("My Account");
+  
+    header.append(logoMenuDiv, navBar);
+  
+    return header;
+  }
+  
+  function loadMain(main, sidebar) {
+    // Begin Main Content (Task) Section
+    const taskMasterSection = c.section("tasks-area");
+    const activeTaskList = c.section("tasks-active");
+    const addForm = c.section("tasks-add");
+    const completedTasksList = c.section("tasks-completed");
+    const addTaskButton = TodoListElement.addTaskButton();
+  
+    addForm.append(addTaskButton);
+  
+    const activeLabel = c.heading("Active", 2, "task-section-header");
+    const completedLabel = c.heading("Completed", 2, "task-section-header");
+    activeTaskList.append(activeLabel);
+    completedTasksList.append(completedLabel);
+  
+    taskMasterSection.append(activeTaskList, addForm, completedTasksList);  
+  
+    main.append(sidebar.getSidebar(), taskMasterSection);
+  
+    // Begin Task-related stuffs (loading tasks and sidebar population.)
+    let initialTasks = connection.getAllItems();
+  
+    if (initialTasks !== null) {
+      for (let item of initialTasks) {
+        TodoListElement.addTaskToView(item, "#tasks-active");
+      }
+    }
+  
+    return main;
+  }
+  
+  function determineSidebarPresentation(sidebarManager) {
+    document.querySelector("#menu-toggle-button").addEventListener("click",
+        TodoListSidebar.toggleSidebar);
+  
+    sidebarManager.mql = 700;
+  
+    TodoListSidebar.queryPageWidth(sidebarManager.mql);
+  
+    sidebarManager.mql.addEventListener("change",  TodoListSidebar.queryPageWidth);
+  }
+
   let [header, main, footer] = [...c.initializeStructure("To-Do List", true)];
-  const sidebarManager = new TodoListSidebar();
+  const sidebar = new TodoListSidebar();
 
   // header elements
   header = loadHeader(header);
-  main = loadMain(main, sidebarManager);
+  main = loadMain(main, sidebar);
   // End Header Section 
 
-  window.addEventListener("load", () => onDocumentReady(sidebarManager)); 
+  window.addEventListener("load", () => determineSidebarPresentation(sidebar)); 
 })();
 
+// TODO LIST
+/*
+// 1. Build the add form for the note list.
+//   a. Use the enumerable properties to determine the type of input to be added.
+//   b. Use the components library to generate an input and label.
+//   c. return a form from addTaskForm
+// 2. Work on the C(reate) part of the app.
+// 3. Local Storage
+// 4. Complete Button
+// 5. The ability to modify tasks.
+// 6. The ability to drag and reorder tasks.
+// 7. The ability to delete tasks. 
+// 8. Time to add the sidebar.
+// 9. The add form css, basic css.
+// 10. Category input
+//- Use library tagify
+11. Sidebar has the following roles:
+// - Today
+// - This week
+// - Categories:
+//   > Categories Listed
+// - Completed
+// 11-2. Move sidebar into a separate class
+// - Class name, PageElement.js
+// - Named it sidebar/
+12. Sidebar functionality:
+- Clicking on one of the buttons filters the tasks.
+- Use TodoListElement
+
+13. Straighten up the navbar.
+Work on the media query for it on 82 of index.js
+
+Backburner:
+- Categories
+- Navbar area
+- UI
+*/
