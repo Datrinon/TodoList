@@ -77,9 +77,13 @@ class TodoListStorage {
     // escapes quotes, which is incorrect JSON format (leave quotes untouched).
     // for that reason, we have to manually run JSON.parse when restoring
     // from storage.
-    for (let i = 0; i < array.length; i++) {
-      array[i].categories = JSON.parse(array[i].categories);
-    }
+    // Never mind, we just catch that before in the TodoListElement class.
+    // for (let i = 0; i < array.length; i++) {
+    //   try {
+    //     array[i].categories = JSON.parse(array[i].categories);
+    //   } catch (error) {
+    //   }
+    // }
 
 
     return array;

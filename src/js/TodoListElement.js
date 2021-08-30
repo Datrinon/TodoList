@@ -1,5 +1,7 @@
 import Tagify from '@yaireo/tagify';
-import { compareAsc, format, formatDistance, formatRelative, subDays } from 'date-fns'
+import { compareAsc, format, formatDistance,
+  isSameDay, nextSunday, getMonth,
+  formatRelative, parseISO, subDays, isToday} from 'date-fns'
 import {Component} from "./component.js";
 import {Task} from "./task.js";
 import priority from "./priority.js";
@@ -15,6 +17,10 @@ export class TodoListElement {
   static connection = connection;
   constructor() {
 
+  }
+
+  static _tagifyOnChange(e) {
+    
   }
 
   /**
@@ -36,6 +42,7 @@ export class TodoListElement {
 
       let catInput = document.querySelector("#task-categories");
       new Tagify(catInput);
+      catInput.addEventListener('change', )
 
       addTask.classList.add("no-display");
     });
@@ -235,8 +242,15 @@ export class TodoListElement {
     task.priority = document.querySelector("#task-priority").value;
     task.description = document.querySelector("#task-description").value;
     task.dueDate = document.querySelector("#task-dueDate").value;
+    if (task.dueDate !== "") {
+      task.dueDate = parseISO(task.dueDate);
+    }
     
     let categories = document.querySelector("#task-categories").value;
+    if (categories !== "") {
+      categories = JSON.parse(categories);
+    }
+
     categories = ([...new Set(categories)])
     task.categories = categories;
 
@@ -258,6 +272,11 @@ export class TodoListElement {
     } 
   }
 
+  /**
+   * Adds tasks to underneath a given parent container.
+   * @param task - The task object to give.
+   * @param parentSelector {string} - Rule to select a container.
+   */
   static addTaskToView(task, parentSelector) {
     let taskView = c.div("task");
 
@@ -303,11 +322,11 @@ export class TodoListElement {
 
     taskDragArea.append(dragButton);
 
-    if (task.completed) {
-      taskDragArea.firstChild.remove();
-      taskView.append(taskDragArea, taskInformationArea);
-      document.querySelector("#tasks-completed").append(taskView);
-    } else {
+    // if (task.completed) {
+    //   taskDragArea.firstChild.remove();
+    //   taskView.append(taskDragArea, taskInformationArea);
+    //   document.querySelector("#tasks-completed").append(taskView);
+    // } else {
       taskView.append(taskDragArea, taskInformationArea, taskControlArea);
       document.querySelector(parentSelector).append(taskView);
 
@@ -321,7 +340,7 @@ export class TodoListElement {
 
       taskView.classList.add("draggable");
       TodoListElement._applyDragCapabilities();
-    }
+    // }
   }
 
   static _applyDragCapabilities() {
@@ -451,40 +470,77 @@ export class TodoListElement {
         if (filterName === "all") {
           condition = (elem) => true;
         } else if (filterName === "nodate") {
-          condition = (elem) => (elem.dueDate === null); 
+          condition = (elem) => (elem.dueDate === ""); 
         } else if (filterName === "completed") {
           condition = (elem) => (elem.completed === true);
         }
         break;
       case "date":
         if (filterName === "today") {
-          condition = (elem) => (compareAsc(new Date(), elem.dueDate) === 0);
+          condition = (elem) => {
+            return (elem.dueDate !== "" && isToday(parseISO(elem.dueDate)));
+          };
         } else if (filterName === "week") {
-          condition = (elem) => (compareAsc(addDays(new Date(), 7), elem.dueDate) === 1);
+          condition = (elem) => {
+            if (elem.dueDate === "") {
+              return false;
+            }
+            let today = new Date();
+            return (compareAsc(nextSunday(today), parseISO(elem.dueDate)) === 1)
+          };
         } else if (filterName === "month") {
-          condition = (elem) => (getMonth(new Date()) === getMonth(elem.dueDate));
+          condition = (elem) => {
+            if (elem.dueDate === "") {
+              return false;
+            }
+            return getMonth(new Date()) === getMonth(parseISO(elem.dueDate));
+          };
         }
         break;
       case "category":
-        condition = (elem) => elem.categories.includes(filterName);
+        condition = (elem) => {
+          for (let cat of elem.categories) {
+            if (cat.value.toLowerCase() === filterName) {
+              return true;
+            }
+          }
+        };
         break;
     }
 
     if (filterName !== "completed") {
-      items = connection.getAllItems()
+      items = TodoListElement.connection.getAllItems()
       .filter(elem => elem.completed === false)
       .filter(condition);
     } else {
-      items = connection.getAllItems().filter(condition);
+      items = TodoListElement.connection.getAllItems().filter(condition);
     }
 
     console.log(items);
+    console.trace();
+    TodoListElement.updateTaskView(filterName, items);
   }
 
   /**
    * Update the task view with given tasks.
    */
-  static updateTaskView(tasks) {
+  static updateTaskView(header, tasks) {
+    let parentContainer = "#tasks-active";
+
+    // remove all task views from the view.
+    document.querySelectorAll("#tasks-active > .task").forEach((elem) => {
+      console.log("removing");
+      elem.remove();
+    });
+    // update the view with the new tasks.
+    for (let task of tasks) {
+      TodoListElement.addTaskToView(task, parentContainer);
+    }
+    if (header === "completed") {
+      document.querySelector("#tasks-add").classList.add("no-display");
+    } else {
+      document.querySelector("#tasks-add").classList.remove("no-display");
+    }
 
   }
 

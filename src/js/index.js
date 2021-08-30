@@ -66,9 +66,7 @@ const c = new Component();
     addForm.append(addTaskButton);
   
     const activeLabel = c.heading("Active", 2, "task-section-header");
-    const completedLabel = c.heading("Completed", 2, "task-section-header");
     activeTaskList.append(activeLabel);
-    completedTasksList.append(completedLabel);
   
     taskMasterSection.append(activeTaskList, addForm, completedTasksList);  
   
@@ -79,7 +77,9 @@ const c = new Component();
   
     if (initialTasks !== null) {
       for (let item of initialTasks) {
-        TodoListElement.addTaskToView(item, "#tasks-active");
+        if (item.completed === false) {
+          TodoListElement.addTaskToView(item, "#tasks-active");
+        }
       }
     }
   

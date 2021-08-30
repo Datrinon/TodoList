@@ -12,7 +12,7 @@ export class TodoListSidebar {
   #sidebarCategoryContainer;
   #sidebarLinks = {
     all: {
-      displayLabel: "All",
+      displayLabel: "Active",
       type: "attribute"
     }, 
     today: {
@@ -20,7 +20,7 @@ export class TodoListSidebar {
       type: "date"
     }, 
     week: {
-      displayLabel: "Next 7 days",
+      displayLabel: "This Week",
       type: "date"
     },
     month: {
@@ -80,7 +80,9 @@ export class TodoListSidebar {
       linkUl.classList.add("task-type-nav-link");
 
       if (link !== "category") { // skip category handler addition, will be done elsewhere.
-        linkUl.addEventListener("click", () => TodoListElement.filterTasks(link, type));
+        linkUl.addEventListener("click", () => {
+          TodoListElement.filterTasks(link, this.#sidebarLinks[link].type)
+        });
       }
 
       linkUl.append(linkButton);
@@ -165,7 +167,7 @@ export class TodoListSidebar {
       //TODO
       // Add filter tasks callback over here.
       catLink.classList.add("category-nav-link");
-      catLink.addEventListener("click", TodoListElement.filterTasks(cat, "category"))
+      catLink.addEventListener("click", () => {TodoListElement.filterTasks(cat, "category")});
   
       catListItem.append(catLink);
       catContainer.append(catListItem);
