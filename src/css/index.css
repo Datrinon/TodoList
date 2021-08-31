@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Spartan&display=swap');
+
+:root {
+  --primary-background-color: rgb(50,50,50);
+  --secondary-background-color: rgb(64,64,64);
+  --text-shadow-1: rgb(157, 157, 157);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  background-color: var(--primary-background-color);
+  color: white;
+}
+
 .no-display {
   display: none;
 }
@@ -10,9 +24,11 @@
   padding-left: 15px;
   justify-content: space-between;
   align-items: center;
+  font-family: "Spartan";
+  font-size: 2.5em;
 }
 
-.logo-menu > *{
+.logo-menu>* {
   display: inline-block;
 }
 
@@ -20,7 +36,6 @@
   all: unset;
   position: relative;
   cursor: pointer;
-  font-size: 2.5em;
   padding: 0 20px 4px 10px;
 }
 
@@ -28,22 +43,37 @@
   padding: 0 25px;
 }
 
-#menu-toggle-button:hover {
+#navbar #navlink-my-account {
+  all: unset;
+  font-family: inherit;
+  position: relative;
 }
 
-/* not working, debug this l8r */
+#navbar #navlink-my-account:hover {
+  font-variant: small-caps;
+  font-weight: bold;
+  text-shadow: var(--text-shadow-1) 1px 0 10px;
+}
+
+#navbar #navlink-my-account:hover::before {
+  content: "Coming Soon!";
+  position: absolute;
+  top: 5px;
+  color: red;
+}
+
 #menu-toggle-button:hover::before {
   position: absolute;
   top: 25px;
   left: 5px;
   content: "Toggle Menu";
   font-size: 15px;
-  color : red;
+  color: red;
   border: 1px solid black;
 }
 
 .page-title {
-  font-size: 3.5em;
+  font-variant: all-small-caps;
 }
 
 #prompt-wrapper {
@@ -56,7 +86,7 @@
 }
 
 .task {
-  border: 1px solid rgba(0,0,0,0);
+  border: 1px solid rgba(0, 0, 0, 0);
 }
 
 .task:hover {
@@ -76,7 +106,7 @@
   z-index: 10;
 }
 
-.task > div {
+.task>div {
   border: 1px solid black;
 }
 
@@ -93,21 +123,13 @@
   width: 300px;
   max-width: 300px;
   transition: max-width 0.5s !important;
-  background-color: white;
+  background-color: var(--secondary-background-color);
 }
 
 .hide-sidebar {
   max-width: 0 !important;
   overflow: hidden;
 }
-
-.sidebar::before {
-  content: "SIDEBAR";
-  font-size: 30px;
-  color: red;
-}
-
-
 
 .footer {
   text-align: center;
@@ -121,19 +143,16 @@
   .main {
     display: unset;
   }
-
   .sidebar {
     position: fixed;
     z-index: 2;
     height: 90vh;
     width: 100vw;
   }
-
   .sidebar-active-wrapper-bg {
     width: 100vw;
     height: 90vh;
     position: fixed;
-    background-color:rgba(0,0,0,0.7);
+    background-color: rgba(0, 0, 0, 0.7);
   }
-
 }

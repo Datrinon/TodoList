@@ -48,6 +48,7 @@ class TodoListSidebar {
     this.#sidebarContent.id = "sidebar-nav";
 
     this.#sidebarBG = this.#c.div("sidebar-wrapper");
+    // this.#sidebarBG.addEventListener("click", this.#hideSideBar);
     this.#sidebarContainer = this.#c.div("sidebar");
 
     this.#sidebarBG.append(this.#sidebarContainer);
@@ -121,8 +122,10 @@ class TodoListSidebar {
     sidebar.classList.toggle("hide-sidebar");
     if (!sidebar.classList.contains("hide-sidebar")) {
       sidebarWrapper.classList.add("sidebar-active-wrapper-bg");
+      sidebarWrapper.addEventListener("click", TodoListSidebar.toggleSidebar);
     } else {
       sidebarWrapper.classList.remove("sidebar-active-wrapper-bg");
+      sidebarWrapper.removeEventListener("click", TodoListSidebar.toggleSidebar);
     }
   }
 

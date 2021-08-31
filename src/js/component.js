@@ -104,7 +104,7 @@ export class Component {
 
       linkButton.classList.add("navbar-button");
       
-      linkAnchor.id = `navlink-${link.toLowerCase()}`;
+      linkAnchor.id = `navlink-${link.replace(" ", "-").toLowerCase()}`;
       linkAnchor.textContent = link;
       linkAnchor.setAttribute("href", "#");
 
