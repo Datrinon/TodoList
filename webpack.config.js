@@ -70,6 +70,10 @@ module.exports = {
         type: 'asset/resource',
       },
       {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource', 
+      },
+      {
         test: /\.txt$/i,
         type: 'asset/source',
       },
@@ -81,7 +85,8 @@ module.exports = {
           header: true,
           skipEmptyLines: true
         }
-      }
+      },
+
     ],
   },
 };

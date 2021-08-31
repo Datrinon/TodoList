@@ -1,9 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Spartan&display=swap');
+@font-face {
+  font-family: "FreeSans";
+  src: url('../fonts/FreeSans.otf') format('otf');
+}
 
 :root {
   --primary-background-color: rgb(50,50,50);
   --secondary-background-color: rgb(64,64,64);
-  --text-shadow-1: rgb(157, 157, 157);
+  --tertiary-background-color: rgb(80,80,80);
+  --text-shadow-1: rgb(157, 157, 157) 1px 0 10px;
+  --invisible: rgba(0,0,0,0);
 }
 
 body {
@@ -24,7 +30,7 @@ body {
   padding-left: 15px;
   justify-content: space-between;
   align-items: center;
-  font-family: "Spartan";
+  font-family: "FreeSans", "Spartan";
   font-size: 2.5em;
 }
 
@@ -37,10 +43,14 @@ body {
   position: relative;
   cursor: pointer;
   padding: 0 20px 4px 10px;
+  font-size: 1.5rem;
 }
 
 #navbar {
   padding: 0 25px;
+  font-size: 1.15rem;
+  font-variant: all-petite-caps;
+  text-shadow: var(--invisible) 1px 0 10px;
 }
 
 #navbar #navlink-my-account {
@@ -50,9 +60,7 @@ body {
 }
 
 #navbar #navlink-my-account:hover {
-  font-variant: small-caps;
-  font-weight: bold;
-  text-shadow: var(--text-shadow-1) 1px 0 10px;
+  text-shadow: var(--text-shadow-1);
 }
 
 #navbar #navlink-my-account:hover::before {
@@ -119,7 +127,7 @@ body {
 
 .sidebar {
   border: 1px solid red;
-  height: 90vh;
+  height: 100%;
   width: 300px;
   max-width: 300px;
   transition: max-width 0.5s !important;
@@ -129,6 +137,42 @@ body {
 .hide-sidebar {
   max-width: 0 !important;
   overflow: hidden;
+}
+
+#sidebar-nav > ul > [id^="nav-link"] button {
+  all: unset;
+
+}
+
+ul > [id^="nav-link"] {
+  padding: 8px 20px;
+  font-weight: bold;
+  font-size: 1.25rem;
+  transition: background-color 0.3s;
+}
+
+[id^="nav-link"]:not(#nav-link-category):hover {
+  background-color: var(--tertiary-background-color);
+}
+
+[id^="nav-link"]:not(#nav-link-category):active {
+  text-shadow: var(--text-shadow-1);
+  background-color: var(--primary-background-color);
+}
+
+ul#category-links > li {
+  font-weight: normal;
+  font-size: 0.85em;
+  padding: 5px 0 10px 10px;
+}
+
+ul#category-links > li:hover {
+  background-color: var(--tertiary-background-color);
+}
+
+ul#category-links > li:active {
+  text-shadow: var(--text-shadow-1);
+  background-color: var(--primary-background-color);
 }
 
 .footer {
