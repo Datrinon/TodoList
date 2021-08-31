@@ -44,7 +44,7 @@ const c = new Component();
     menuButton.append(menuIcon);
   
     logoMenuDiv = c.div("logo-menu");
-    pageLogo = c.heading("To-Do List", 1);
+    pageLogo = c.heading("To-Do List", 1, "page-title");
     
     logoMenuDiv.append(menuButton, pageLogo);
     
@@ -133,12 +133,18 @@ const c = new Component();
 // 11-2. Move sidebar into a separate class
 // - Class name, PageElement.js
 // - Named it sidebar/
-12. Sidebar functionality:
-- Clicking on one of the buttons filters the tasks.
-- Use TodoListElement
+// 12. Sidebar functionality:
+// - Clicking on one of the buttons filters the tasks.
+// - Use TodoListElement
 
-13. Straighten up the navbar.
-Work on the media query for it on 82 of index.js
+// 13. Straighten up the navbar.
+// Work on the media query for it on 82 of index.js
+12. Each time you edit or append tags, update the task view.
+14. CSS time
+a. Top bar CSS
+b. Sidebar CSS
+c. Tasks
+
 
 Backburner:
 - Categories

@@ -197,7 +197,9 @@ export class Component {
     }
     let header = document.createElement(`h${level}`);
 
-    header.classList.add(...className);
+    if (className !== null) {
+      header.classList.add(...className);
+    }
     header.textContent = text;
 
     return header;

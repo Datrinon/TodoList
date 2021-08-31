@@ -8,7 +8,42 @@
   flex-direction: row;
   height: 5vh;
   padding-left: 15px;
-  padding-top: 5px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-menu > *{
+  display: inline-block;
+}
+
+#menu-toggle-button {
+  all: unset;
+  position: relative;
+  cursor: pointer;
+  font-size: 2.5em;
+  padding: 0 20px 4px 10px;
+}
+
+#navbar {
+  padding: 0 25px;
+}
+
+#menu-toggle-button:hover {
+}
+
+/* not working, debug this l8r */
+#menu-toggle-button:hover::before {
+  position: absolute;
+  top: 25px;
+  left: 5px;
+  content: "Toggle Menu";
+  font-size: 15px;
+  color : red;
+  border: 1px solid black;
+}
+
+.page-title {
+  font-size: 3.5em;
 }
 
 #prompt-wrapper {
@@ -72,21 +107,7 @@
   color: red;
 }
 
-#menu-toggle-button {
-  position: relative;
-  cursor: pointer;
-}
 
-/* not working, debug this l8r */
-#menu-toggle-button:hover::before {
-  position: absolute;
-  top: 25px;
-  left: 5px;
-  content: "Toggle Menu";
-  font-size: 15px;
-  color : red;
-  border: 1px solid black;
-}
 
 .footer {
   text-align: center;
