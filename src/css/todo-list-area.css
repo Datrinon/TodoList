@@ -63,3 +63,46 @@ form > [class^="container-task"] > *{
     opacity: 0;
   }
 }
+
+.task.draggable {
+  display: flex;
+  flex-direction: row;
+}
+
+.task-move {
+  width: 5%;
+}
+
+.task-move > button.task-view-drag-button {
+  all: unset;
+  height: 100%;
+  color: white;
+  display: block;
+  margin: 0 auto;
+}
+
+.task-information {
+  display: flex;
+  flex-direction:column;
+  width: 60%;
+}
+
+.task-controls {
+  width: 35%;
+}
+
+.task-controls > button {
+  all: unset;
+  border: 1px solid black;
+  width: 32%;
+  text-align: center;
+}
+
+.task-controls > button svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.task-view-priority::before {
+  /* content: "Priority: "; */
+}

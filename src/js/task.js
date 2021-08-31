@@ -25,5 +25,4 @@ export class Task {
       console.log(this[prop]);
     }
   }
-
 }

@@ -16,6 +16,7 @@ const c = new Component();
 export class TodoListElement {
 
   static connection = connection;
+  static p = priority;
 
   constructor() {
 
@@ -210,21 +211,50 @@ export class TodoListElement {
     task.id = taskId;
 
     connection.update(task);
+    TodoListElement._updateTaskOnView(task);
 
-    let taskView = document.querySelector(`#task-${taskId}`);
+    sidebar.updateCategorySidebarListing();
+  }
+
+  static _updateTaskOnView(task) {
+    let taskView = document.querySelector(`#task-${task.id}`);
 
     taskView.querySelector(".task-view-title").textContent = task.title;
-    taskView.querySelector(".task-view-priority").textContent = task.priority;
+
+
+    let priorityStars = "";
+    for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
+      priorityStars += "•";
+    }
+    taskView.querySelector(".task-view-priority").textContent = priorityStars;
+
+
     taskView.querySelector(".task-view-description").textContent = task.description;
     taskView.querySelector(".task-view-create-date").textContent = format(task.id, "'Added' MM/dd/yyyy");
-    taskView.querySelector(".task-view-due-date").textContent = task.dueDate;
-    taskView.querySelector(".task-view-categories").textContent = task.categories;
+
+    let dueDateMsg;
+    if (task.dueDate === "") {
+      dueDateMsg = "No due date set.";
+    } else {
+      dueDateMsg = format(parseISO(task.dueDate), 'MMM. do, yyyy');
+    }
+    taskView.querySelector(".task-view-due-date").textContent = dueDateMsg;
+
+    let categories = taskView.querySelector(".task-view-categories");
+    categories.textContent = "";
+    if (task.categories.length !== 0){
+      task.categories.forEach(elem => {
+        let span = c.span(elem.value);
+        categories.append(span);
+      });
+    } else {
+      categories.append(c.paragraph("No categories set."));
+    }
+
     c.toast("Task updated successfully", 3);
     console.log("Task updated successfully.");
     // remove the form after we've finished using it.
     taskView.querySelector("#edit-task-form").remove();
-
-    sidebar.updateCategorySidebarListing();
   }
 
   static _handleAddTask() {
@@ -291,21 +321,41 @@ export class TodoListElement {
     let taskDragArea = c.div("task-move");
     let taskControlArea = c.div("task-controls");
 
+    // Information Section Begin
     taskView.id = "task-" + task.id;
     let header = c.heading(task.title, 2, "task-view-title");
     let createDate = c.paragraph(format(task.id, "'Added' MM/dd/yyyy"), "task-view-create-date"); //c.paragraph();
-    let dueDate = c.paragraph(task.dueDate, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
-    let priority = c.paragraph(task.priority, "task-view-priority");
+
+    let dueDate;
+    let dueDateMsg;
+    if (task.dueDate === "") {
+      dueDateMsg = "No due date set.";
+    } else {
+      dueDateMsg = format(parseISO(task.dueDate), 'MMM. do, yyyy');
+    }
+    dueDate = c.paragraph(dueDateMsg, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
+
+    let priorityStars = "";
+    let priority = c.paragraph("", "task-view-priority");
+    for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
+      priorityStars += "•";
+    }
+    priority.textContent = priorityStars;
+
     let description = c.paragraph(task.description, "task-view-description");
-    let categories = c.paragraph("", "task-view-categories");
+    let categories = c.div("task-view-categories");
     if (task.categories.length !== 0){
       task.categories.forEach(elem => {
-        categories.textContent += elem.value;
+        let span = c.span(elem.value);
+        categories.append(span);
       });
+    } else {
+      categories.append(c.paragraph("No categories set."));
     }
 
-    taskInformationArea.append(header, createDate, dueDate, priority, description, categories);
-    
+    taskInformationArea.append(header, dueDate, categories, priority, description, createDate);
+    // Information Section End
+
     // Controls Section Begin
 
     let finishButton = c.button("", "task-view-finish-button");
