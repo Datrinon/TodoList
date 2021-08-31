@@ -141,8 +141,11 @@ body {
 
 #sidebar-nav > ul > [id^="nav-link"] button {
   all: unset;
-
+  font-weight: 100;
+  letter-spacing: 1px;
+  text-transform: capitalize;
 }
+
 
 ul > [id^="nav-link"] {
   padding: 8px 20px;
@@ -163,7 +166,12 @@ ul > [id^="nav-link"] {
 ul#category-links > li {
   font-weight: normal;
   font-size: 0.85em;
-  padding: 5px 0 10px 10px;
+  padding: 8px 0 8px 20px;
+  font-variant: all-petite-caps;
+}
+
+#category-links {
+  margin-top: 5px;
 }
 
 ul#category-links > li:hover {
@@ -172,6 +180,11 @@ ul#category-links > li:hover {
 
 ul#category-links > li:active {
   text-shadow: var(--text-shadow-1);
+  background-color: var(--primary-background-color);
+}
+
+.sidebar-selected {
+  color: orange;
   background-color: var(--primary-background-color);
 }
 

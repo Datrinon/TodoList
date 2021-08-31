@@ -12,7 +12,7 @@ class TodoListSidebar {
   #sidebarCategoryContainer;
   #sidebarLinks = {
     all: {
-      displayLabel: "Active",
+      displayLabel: "All",
       type: "attribute"
     }, 
     today: {
@@ -80,10 +80,20 @@ class TodoListSidebar {
       linkUl.id = linkId;
       linkUl.classList.add("task-type-nav-link");
 
+
       if (link !== "category") { // skip category handler addition, will be done elsewhere.
-        linkUl.addEventListener("click", () => {
+        linkUl.addEventListener("click", (e) => {
+          let currentSelected = document.querySelector(".sidebar-selected");
+          if (currentSelected !== null) {
+            currentSelected.classList.remove("sidebar-selected");
+          }
+          e.currentTarget.classList.add("sidebar-selected");
           TodoListElement.filterTasks(link, this.#sidebarLinks[link].type)
         });
+      }
+
+      if (link === "all") {
+        linkUl.classList.add("sidebar-selected");
       }
 
       linkUl.append(linkButton);
@@ -170,7 +180,14 @@ class TodoListSidebar {
       //TODO
       // Add filter tasks callback over here.
       catLink.classList.add("category-nav-link");
-      catLink.addEventListener("click", () => {TodoListElement.filterTasks(cat, "category")});
+      catLink.addEventListener("click", (e) => {
+        let currentSelected = document.querySelector(".sidebar-selected");
+        if (currentSelected !== null) {
+          currentSelected.classList.remove("sidebar-selected");
+        }
+        e.currentTarget.classList.add("sidebar-selected");
+        TodoListElement.filterTasks(cat, "category")
+      });
   
       catListItem.append(catLink);
       catContainer.append(catListItem);

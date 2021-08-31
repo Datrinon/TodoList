@@ -102,8 +102,12 @@ export class TodoListElement {
         }
       });
 
-      categoryField[1].value = task.categories.length !== 0 ?
-          JSON.parse(task.categories) : task.categories;
+      // if (typeof task.categories === "string" && task.categories.length !== 0) {
+      //   categoryField[1].value = JSON.parse(task.categories);  
+      // } else {
+      //   categoryField[1].value = task.categories;
+      // }
+      categoryField[1].value = JSON.stringify(task.categories);
       descriptionField[1].value = task.description;
       dueDateField[1].value = task.dueDate;
     }
