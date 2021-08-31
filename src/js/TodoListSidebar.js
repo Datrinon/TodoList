@@ -2,7 +2,7 @@ import connection from "./TodoListStorage.js";
 import {Component} from "./component.js";
 import {TodoListElement} from "./TodoListElement.js";
 
-export class TodoListSidebar {
+class TodoListSidebar {
   
   #mql;
   #c;
@@ -180,3 +180,7 @@ export class TodoListSidebar {
     return this.#sidebarBG;
   }
 }
+
+const sidebar = new TodoListSidebar();
+
+export {sidebar, TodoListSidebar};

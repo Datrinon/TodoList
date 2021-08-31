@@ -19,7 +19,7 @@ import '@yaireo/tagify/dist/tagify.css';
 import {Component} from "./component.js";
 import {TodoListElement} from "./TodoListElement.js";
 import connection from "./TodoListStorage.js";
-import {TodoListSidebar} from "./TodoListSidebar.js";
+import {sidebar, TodoListSidebar} from "./TodoListSidebar.js";
 
 const c = new Component();
 
@@ -98,7 +98,6 @@ const c = new Component();
   }
 
   let [header, main, footer] = [...c.initializeStructure("To-Do List", true)];
-  const sidebar = new TodoListSidebar();
 
   // header elements
   header = loadHeader(header);

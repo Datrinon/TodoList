@@ -6,6 +6,7 @@ import {Component} from "./component.js";
 import {Task} from "./task.js";
 import priority from "./priority.js";
 import connection from "./TodoListStorage.js";
+import {sidebar, TodoListSidebar} from "./TodoListSidebar.js";
 const c = new Component();
 
 /**
@@ -15,12 +16,9 @@ const c = new Component();
 export class TodoListElement {
 
   static connection = connection;
+
   constructor() {
 
-  }
-
-  static _tagifyOnChange(e) {
-    
   }
 
   /**
@@ -104,7 +102,8 @@ export class TodoListElement {
         }
       });
 
-      categoryField[1].value = task.categories;
+      categoryField[1].value = task.categories.length !== 0 ?
+          JSON.parse(task.categories) : task.categories;
       descriptionField[1].value = task.description;
       dueDateField[1].value = task.dueDate;
     }
@@ -171,7 +170,7 @@ export class TodoListElement {
     }
     // Had to implement this since the append call
     // doesn't seem to be able to remove
-    // a duplicate form...?
+    // a duplicate form... (edit form open on two posts)
     if (document.querySelector(`#${form.id}`) !== null) {
       document.querySelector(`#${form.id}`).remove();
     }
@@ -220,6 +219,8 @@ export class TodoListElement {
     console.log("Task updated successfully.");
     // remove the form after we've finished using it.
     taskView.querySelector("#edit-task-form").remove();
+
+    sidebar.updateCategorySidebarListing();
   }
 
   static _handleAddTask() {
@@ -234,6 +235,8 @@ export class TodoListElement {
     TodoListElement.addTaskToView(task, "#tasks-active");
     
     TodoListElement.connection.add(task);
+
+    sidebar.updateCategorySidebarListing();
   }
 
   static _parseFormFields() {
@@ -290,7 +293,12 @@ export class TodoListElement {
     let dueDate = c.paragraph(task.dueDate, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
     let priority = c.paragraph(task.priority, "task-view-priority");
     let description = c.paragraph(task.description, "task-view-description");
-    let categories = c.paragraph(task.categories, "task-view-categories");
+    let categories = c.paragraph("", "task-view-categories");
+    if (task.categories.length !== 0){
+      task.categories.forEach(elem => {
+        categories.textContent += elem.value;
+      });
+    }
 
     taskInformationArea.append(header, createDate, dueDate, priority, description, categories);
     
@@ -516,8 +524,8 @@ export class TodoListElement {
       items = TodoListElement.connection.getAllItems().filter(condition);
     }
 
-    console.log(items);
-    console.trace();
+    // console.log(items);
+    // console.trace();
     TodoListElement.updateTaskView(filterName, items);
   }
 
