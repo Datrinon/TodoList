@@ -95,4 +95,5 @@ form #update-task-submit {
   border-radius: 5px;
   position: relative;
   top: 25%;
+  margin: 0 5px;
 }

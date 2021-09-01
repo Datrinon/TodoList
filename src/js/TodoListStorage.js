@@ -1,3 +1,5 @@
+import {getUnixTime, parseISO} from "date-fns";  
+
 /**
  * Establishes a connection to local storage and pushes/pulls data to local storage.
  */
@@ -20,6 +22,7 @@ class TodoListStorage {
       this.#storage = [];
     } else {
       this.#storage = this.#restoreFromStorage();
+      this.sortByDueDate();
     }
 
   }
@@ -88,7 +91,36 @@ class TodoListStorage {
 
     return array;
   }
+
+  sortByDueDate() {
+    
+    console.log(this.#storage);
+    console.log("Sorting");
+
+    this.#storage.sort((a, b) => {
+      a = a.dueDate;
+      b = b.dueDate;
+      if (a === "") {
+        a = "1970-01-01"; 
+      }
+      if (b === "") {
+        b = "1970-01-01";
+      }
+      
+      let aMs = getUnixTime(parseISO(a));
+      let bMs = getUnixTime(parseISO(b));
+
+      if (aMs > bMs) {
+        return -1;
+      } else {
+        return 1;
+      }
+    })
+    console.log(this.#storage);
+  }
 }
+
+
 
 const connection = new TodoListStorage(STORAGE_KEY);
 
