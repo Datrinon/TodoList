@@ -1,5 +1,5 @@
 import Tagify from '@yaireo/tagify';
-import { compareAsc, format, formatDistance,
+import { compareAsc, format, isPast,
   isSameDay, nextSunday, getMonth,
   formatRelative, parseISO, subDays, isToday} from 'date-fns'
 import {Component} from "./component.js";
@@ -226,27 +226,32 @@ export class TodoListElement {
 
     let priorityStars = "";
     for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
-      priorityStars += "•";
+      priorityStars += "★";
     }
     taskView.querySelector(".task-view-priority").textContent = priorityStars;
-
 
     taskView.querySelector(".task-view-description").textContent = task.description;
     taskView.querySelector(".task-view-create-date").textContent = format(task.id, "'Added' MM/dd/yyyy");
 
+    let dueDate;
     let dueDateMsg;
     if (task.dueDate === "") {
       dueDateMsg = "No due date set.";
     } else {
-      dueDateMsg = format(parseISO(task.dueDate), 'MMM. do, yyyy');
+      dueDateMsg = "Due " + format(parseISO(task.dueDate), 'MMM. do, yyyy');
+      if (!isSameDay(parseISO(task.dueDate), new Date()) && isPast(parseISO(task.dueDate))) {
+        taskView.classList.add("overdue");
+        dueDateMsg += " (Overdue)";
+      }
     }
-    taskView.querySelector(".task-view-due-date").textContent = dueDateMsg;
+
+    dueDate = c.paragraph(dueDateMsg, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
 
     let categories = taskView.querySelector(".task-view-categories");
     categories.textContent = "";
     if (task.categories.length !== 0){
       task.categories.forEach(elem => {
-        let span = c.span(elem.value);
+        let span = c.span(elem.value, "category-label");
         categories.append(span);
       });
     } else {
@@ -342,7 +347,12 @@ export class TodoListElement {
       dueDateMsg = "No due date set.";
     } else {
       dueDateMsg = "Due " + format(parseISO(task.dueDate), 'MMM. do, yyyy');
+      if (!isSameDay(parseISO(task.dueDate), new Date()) && isPast(parseISO(task.dueDate))) {
+        taskView.classList.add("overdue");
+        dueDateMsg += " (Overdue)";
+      }
     }
+
     dueDate = c.paragraph(dueDateMsg, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
 
     let priorityStars = "";
@@ -356,7 +366,7 @@ export class TodoListElement {
     let categories = c.div("task-view-categories");
     if (task.categories.length !== 0){
       task.categories.forEach(elem => {
-        let span = c.span(elem.value);
+        let span = c.span(elem.value, "category-label");
         categories.append(span);
       });
     } else {
@@ -420,6 +430,7 @@ export class TodoListElement {
     ////   document.querySelector("#tasks-completed").append(taskView);
   //// } else {
     taskView.append(taskDragArea, taskInformationArea, taskControlArea);
+
     document.querySelector(parentSelector).append(taskView);
 
     dragButton.addEventListener("mousedown", () => {
@@ -433,6 +444,7 @@ export class TodoListElement {
     taskView.classList.add("draggable");
     TodoListElement._applyDragCapabilities();
     //// }
+
   }
 
   static _applyDragCapabilities() {
@@ -508,7 +520,7 @@ export class TodoListElement {
     while (!taskView.id.includes("task-")) {
       taskView = taskView.parentNode;
     }
-    
+
     let id = +taskView.id.split("task-")[1];
 
     // Mark the task as completed
@@ -633,9 +645,16 @@ export class TodoListElement {
       elem.remove();
     });
     // update the view...
-    // with the name of the filter.
+    // with the name of the filter, unless it's a category.
+    let displayLabel;
+    if (filterName in sidebar.sidebarLinks) {
+      displayLabel = sidebar.sidebarLinks[filterName].displayLabel;
+    } else {
+      displayLabel = filterName;
+    }
+
     document.querySelector(`${parentContainer} > .task-section-header`)
-        .textContent = sidebar.sidebarLinks[filterName].displayLabel;
+        .textContent = displayLabel;
     // and for the new tasks.
     for (let task of tasks) {
       TodoListElement.addTaskToView(task, parentContainer);

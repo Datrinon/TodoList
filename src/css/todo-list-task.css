@@ -83,3 +83,16 @@ form #update-task-submit {
   font-size: 1.1em;
   font-style: italic;
 }
+
+.task-view-categories {
+  height: 40px;
+}
+
+.category-label {
+  padding: 0 5px;
+  border: 1px solid #bdeef8;
+  background-color: hsl(185deg 55% 49%);
+  border-radius: 5px;
+  position: relative;
+  top: 25%;
+}
