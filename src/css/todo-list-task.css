@@ -3,14 +3,13 @@
 }
 
 form label {
+  font-family: "Spartan";
   font-variant: all-small-caps;
   font-size: 1.25rem;
 }
 
 .task form {
-  border: 1px solid white;
-  border-radius: 5px;
-  padding: 10px;
+
 }
 
 form div.container-task-title input {

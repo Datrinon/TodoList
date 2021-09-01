@@ -41,7 +41,6 @@ export class TodoListElement {
 
       let catInput = document.querySelector("#task-categories");
       new Tagify(catInput);
-      catInput.addEventListener('change', )
 
       addTask.classList.add("no-display");
     });
@@ -124,7 +123,7 @@ export class TodoListElement {
 
     buttonSection = c.div("form-buttons");
 
-    okButton = c.button("Create Task", "form-button");
+    okButton = c.button("Add", "form-button");
     cancelButton = c.button("Close", "form-button");
 
     okButton.setAttribute("type", "button");
