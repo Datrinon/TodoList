@@ -46,6 +46,18 @@ body {
   font-size: 1.5rem;
 }
 
+.today-date {
+  padding: 0 60px;
+  font-variant: all-small-caps;
+}
+
+.today-date::before {
+  content: "Today is ";
+  font-size: 40%;
+  padding: 0 10px;
+  font-style: italic;
+}
+
 #navbar {
   padding: 0 25px;
   font-size: 1.15rem;
@@ -124,6 +136,7 @@ body {
   margin: 0 auto;
   display: block;
   z-index: 10;
+  color: black;
 }
 
 .task>div {
@@ -162,7 +175,7 @@ body {
 ul > [id^="nav-link"] {
   padding: 8px 20px;
   font-weight: bold;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   transition: background-color 0.3s;
 }
 

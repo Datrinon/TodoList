@@ -21,6 +21,7 @@ import {Component} from "./component.js";
 import {TodoListElement} from "./TodoListElement.js";
 import connection from "./TodoListStorage.js";
 import {sidebar, TodoListSidebar} from "./TodoListSidebar.js";
+import {format} from "date-fns";
 
 const c = new Component();
 
@@ -36,6 +37,7 @@ const c = new Component();
     let menuIcon;
     let logoMenuDiv;
     let pageLogo;
+    let todayDate;
     let navBar;
   
     menuButton = c.button("", "navbar-button");
@@ -46,8 +48,10 @@ const c = new Component();
   
     logoMenuDiv = c.div("logo-menu");
     pageLogo = c.heading("To-Do List", 1, "page-title");
-    
-    logoMenuDiv.append(menuButton, pageLogo);
+    todayDate = c.paragraph(`${format(new Date(), "PP")}`, "today-date");
+
+    logoMenuDiv.append(menuButton, pageLogo, todayDate);
+
     
     navBar = c.navbar("My Account");
   

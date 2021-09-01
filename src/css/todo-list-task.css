@@ -62,3 +62,24 @@ form .form-button {
 form #update-task-submit {
   background-color: orange;
 }
+
+.expand-task-button {
+  all: unset;
+  color: white;
+  /* TODO need some animations on this when you click expand. */
+}
+
+.general-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.task-view-title {
+  font-size: 1.25em;
+}
+
+.task-view-due-date {
+  font-size: 1.1em;
+  font-style: italic;
+}

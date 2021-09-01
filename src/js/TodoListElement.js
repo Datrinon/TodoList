@@ -321,11 +321,15 @@ export class TodoListElement {
    * @param parentSelector {string} - Rule to select a container.
    */
   static addTaskToView(task, parentSelector) {
+    
     let taskView = c.div("task");
 
     let taskInformationArea = c.div("task-information");
     let taskDragArea = c.div("task-move");
     let taskControlArea = c.div("task-controls");
+
+    //TODO
+    // Refactor this into methods -- populateTaskInformation, populate TaskControls, taskApplyDrag
 
     // Information Section Begin
     taskView.id = "task-" + task.id;
@@ -337,7 +341,7 @@ export class TodoListElement {
     if (task.dueDate === "") {
       dueDateMsg = "No due date set.";
     } else {
-      dueDateMsg = format(parseISO(task.dueDate), 'MMM. do, yyyy');
+      dueDateMsg = "Due " + format(parseISO(task.dueDate), 'MMM. do, yyyy');
     }
     dueDate = c.paragraph(dueDateMsg, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
 
@@ -359,7 +363,27 @@ export class TodoListElement {
       categories.append(c.paragraph("No categories set."));
     }
 
-    taskInformationArea.append(header, dueDate, categories, priority, description, createDate);
+    //taskInformationArea.append(header, dueDate, categories, priority, description, createDate);
+
+    let generalInfo = c.div("general-info");
+    let expandedInfo = c.div("expanded-info", "no-display");
+    let expandButton = c.button("", "expand-task-button");
+    let expandIcon = c.faIcon("fas", "fa-chevron-down");
+
+
+    generalInfo.append(header, dueDate);
+    expandedInfo.append(categories, priority, description, createDate);
+    expandButton.append(expandIcon);
+    
+    expandButton.addEventListener("click", (e) => {
+      let task = e.currentTarget;
+      while (!task.id.includes("task-")) {
+        task = task.parentNode;
+      }
+      task.querySelector(".expanded-info").classList.toggle("no-display");
+    })
+
+    taskInformationArea.append(generalInfo, expandedInfo, expandButton);
     // Information Section End
 
     // Controls Section Begin
@@ -390,25 +414,25 @@ export class TodoListElement {
 
     taskDragArea.append(dragButton);
 
-    // if (task.completed) {
-    //   taskDragArea.firstChild.remove();
-    //   taskView.append(taskDragArea, taskInformationArea);
-    //   document.querySelector("#tasks-completed").append(taskView);
-    // } else {
-      taskView.append(taskDragArea, taskInformationArea, taskControlArea);
-      document.querySelector(parentSelector).append(taskView);
+//    // if (task.completed) {
+  //  //   taskDragArea.firstChild.remove();
+    ////   taskView.append(taskDragArea, taskInformationArea);
+    ////   document.querySelector("#tasks-completed").append(taskView);
+  //// } else {
+    taskView.append(taskDragArea, taskInformationArea, taskControlArea);
+    document.querySelector(parentSelector).append(taskView);
 
-      dragButton.addEventListener("mousedown", () => {
-        taskView.setAttribute("draggable", "true");
-      });
+    dragButton.addEventListener("mousedown", () => {
+      taskView.setAttribute("draggable", "true");
+    });
 
-      dragButton.addEventListener("mouseup", () => {
-        taskView.removeAttribute("draggable");
-      });
+    dragButton.addEventListener("mouseup", () => {
+      taskView.removeAttribute("draggable");
+    });
 
-      taskView.classList.add("draggable");
-      TodoListElement._applyDragCapabilities();
-    // }
+    taskView.classList.add("draggable");
+    TodoListElement._applyDragCapabilities();
+    //// }
   }
 
   static _applyDragCapabilities() {
@@ -480,7 +504,11 @@ export class TodoListElement {
   }
 
   static _completeTask(e) {
-    let taskView = e.currentTarget.parentNode;
+    let taskView = e.currentTarget;
+    while (!taskView.id.includes("task-")) {
+      taskView = taskView.parentNode;
+    }
+    
     let id = +taskView.id.split("task-")[1];
 
     // Mark the task as completed
@@ -500,7 +528,11 @@ export class TodoListElement {
   }
 
   static _deleteTask(e) {
-    let taskView = e.currentTarget.parentNode;
+    let taskView = e.currentTarget;
+    while (!taskView.id.includes("task-")) {
+      taskView = taskView.parentNode;
+    }
+
     let taskId = +taskView.id.split("task-")[1];
     let taskTitle = taskView.querySelector(".task-view-title").textContent;
 
