@@ -14,6 +14,7 @@ import '../css/sticky-footer.css';
 import '../css/index.css';
 import '../css/draggable.css';
 import '../css/todo-list-area.css';
+import '../css/todo-list-task.css';
 import '@yaireo/tagify/dist/tagify.css';
 
 import {Component} from "./component.js";

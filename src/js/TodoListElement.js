@@ -155,13 +155,13 @@ export class TodoListElement {
   }
 
   static _displayEditTaskForm(e) {
-    let elem = e.currentTarget; 
-    while(!elem.id.includes("task-")) {
-      elem = elem.parentNode;
+    let taskView = e.currentTarget; 
+    while(!taskView.id.includes("task-")) {
+      taskView = taskView.parentNode;
     }
 
     // pop up an edit form that looks like the addtask form.
-    let existingTaskId = +elem.id.split("task-")[1];
+    let existingTaskId = +taskView.id.split("task-")[1];
 
     let form = document.createElement("form");
     form.id = "edit-task-form";
@@ -183,7 +183,10 @@ export class TodoListElement {
     form = TodoListElement._generateTaskFormFields(form, existingTaskId);
     form = TodoListElement._generateTaskFormButtons(form, existingTaskId);
 
-    e.currentTarget.parentNode.append(form);
+    taskView.append(form);
+    // TODO
+    // and then disable the view of the element.
+    // taskView.classList.add("form-active-task-no-display");
 
     let catInput = document.querySelector("#task-categories");
     new Tagify(catInput);
@@ -306,7 +309,11 @@ export class TodoListElement {
     // display the button again if the form being closed is the add-task-form.
     if (id === "add-task-form") {
       document.querySelector("#display-ask-form-button").classList.remove("no-display");
-    } 
+    }
+    // TODO
+    // display the task again too.
+      // document.querySelector(".form-active-task-disable-display")
+      //     .classList.remove("form-active-task-disable-display");
   }
 
   /**
@@ -338,7 +345,7 @@ export class TodoListElement {
     let priorityStars = "";
     let priority = c.paragraph("", "task-view-priority");
     for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
-      priorityStars += "•";
+      priorityStars += "★";
     }
     priority.textContent = priorityStars;
 

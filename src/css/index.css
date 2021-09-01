@@ -66,18 +66,30 @@ body {
 #navbar #navlink-my-account:hover::before {
   content: "Coming Soon!";
   position: absolute;
-  top: 5px;
-  color: red;
+  top: 25px;
+  color: black;
+  width: 100px;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont;
+  border: 1px solid white;
+  border-radius: 5px;
+  text-align: center;
+  background-color: rgba(255,255,255,0.5);
+  font-style: italic;
 }
 
 #menu-toggle-button:hover::before {
   position: absolute;
-  top: 25px;
-  left: 5px;
   content: "Toggle Menu";
-  font-size: 15px;
-  color: red;
-  border: 1px solid black;
+  top: 25px;
+  color: black;
+  width: 100px;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont;
+  border: 1px solid white;
+  border-radius: 5px;
+  text-align: center;
+  background-color: rgba(255,255,255,0.5);
+  font-style: italic;
+  font-size: 75%;
 }
 
 .page-title {

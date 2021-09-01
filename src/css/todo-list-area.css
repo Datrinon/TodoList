@@ -1,12 +1,11 @@
 #tasks-area {
-  max-width: 600px;
+  margin: 0 auto;
 }
 
 #add-task-form, #edit-task-form {
   display: grid;
   grid-template-rows: 1fr 3fr 1fr;
   grid-template-columns: 2fr 1fr 1fr;
-  border: 1px solid black;
 }
 
 form > [class^="container-task"] > *{
@@ -43,11 +42,7 @@ form > [class^="container-task"] > *{
   grid-column: 3 / 4;
 }
 
-#task-description {
-  resize: none;
-  width: 100%;
-  height: 100%;
-}
+
 
 @keyframes fade-in-out {
   0% {
@@ -65,12 +60,16 @@ form > [class^="container-task"] > *{
 }
 
 .task.draggable {
-  display: flex;
-  flex-direction: row;
+  width: 50vw;
+  max-width: 800px;
+  display: grid;
+  grid-template-columns: 5% 60% 35%;
+  grid-template-rows: repeat(2, auto);
 }
 
 .task-move {
-  width: 5%;
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
 }
 
 .task-move > button.task-view-drag-button {
@@ -82,25 +81,36 @@ form > [class^="container-task"] > *{
 }
 
 .task-information {
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
   display: flex;
   flex-direction:column;
-  width: 60%;
 }
 
 .task-controls {
-  width: 35%;
+  grid-row: 1 / 2;
+  grid-column: 3 / 4;
 }
 
 .task-controls > button {
   all: unset;
-  border: 1px solid black;
+  border: 1px solid white;
   width: 32%;
   text-align: center;
+  position: relative;
+  top: 25%;
 }
 
 .task-controls > button svg {
   display: block;
   margin: 0 auto;
+}
+
+.task #edit-task-form {
+  grid-row: 2 / 3;
+  grid-column: 1 / 4;
+  width: 94%;
+  margin: 5px auto;
 }
 
 .task-view-priority::before {
