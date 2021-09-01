@@ -291,7 +291,7 @@ export class Component {
 
   span(textContent = null, ...className) {
     let span = document.createElement("span");
-    if (span !== null) {
+    if (className !== null) {
       span.classList.add(...className);
     }
     span.textContent = textContent;

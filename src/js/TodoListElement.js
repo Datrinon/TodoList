@@ -590,21 +590,26 @@ export class TodoListElement {
   }
 
   /**
-   * Update the task view with given tasks.
+   * Update the task view with given tasks, and show the filter as the header name.
    */
-  static updateTaskView(header, tasks) {
+  static updateTaskView(filterName, tasks) {
     let parentContainer = "#tasks-active";
 
     // remove all task views from the view.
-    document.querySelectorAll("#tasks-active > .task").forEach((elem) => {
+    document.querySelectorAll(`${parentContainer} > .task`).forEach((elem) => {
       console.log("removing");
       elem.remove();
     });
-    // update the view with the new tasks.
+    // update the view...
+    // with the name of the filter.
+    document.querySelector(`${parentContainer} > .task-section-header`)
+        .textContent = sidebar.sidebarLinks[filterName].displayLabel;
+    // and for the new tasks.
     for (let task of tasks) {
       TodoListElement.addTaskToView(task, parentContainer);
     }
-    if (header === "completed") {
+    // don't let users add for completed tasks section.
+    if (filterName === "completed") {
       document.querySelector("#tasks-add").classList.add("no-display");
     } else {
       document.querySelector("#tasks-add").classList.remove("no-display");

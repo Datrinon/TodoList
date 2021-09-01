@@ -19,7 +19,7 @@ body {
 }
 
 .no-display {
-  display: none;
+  display: none !important;
 }
 
 #header {

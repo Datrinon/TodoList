@@ -10,7 +10,7 @@ class TodoListSidebar {
   #sidebarContainer;
   #sidebarContent;
   #sidebarCategoryContainer;
-  #sidebarLinks = {
+  sidebarLinks = {
     all: {
       displayLabel: "All",
       type: "attribute"
@@ -68,13 +68,13 @@ class TodoListSidebar {
   #loadSideBar() {
     let sideBarLinksContainer = document.createElement("ul");
     
-    for (let link in this.#sidebarLinks) {
+    for (let link in this.sidebarLinks) {
       let linkUl;
       let linkId;
       let linkButton;
 
       linkUl = document.createElement("li");
-      linkButton = this.#c.button(this.#sidebarLinks[link].displayLabel);
+      linkButton = this.#c.button(this.sidebarLinks[link].displayLabel);
       linkId = `nav-link-${link}`;
       
       linkUl.id = linkId;
@@ -88,7 +88,7 @@ class TodoListSidebar {
             currentSelected.classList.remove("sidebar-selected");
           }
           e.currentTarget.classList.add("sidebar-selected");
-          TodoListElement.filterTasks(link, this.#sidebarLinks[link].type)
+          TodoListElement.filterTasks(link, this.sidebarLinks[link].type)
         });
       }
 

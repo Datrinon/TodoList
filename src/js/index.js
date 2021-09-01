@@ -66,7 +66,7 @@ const c = new Component();
   
     addForm.append(addTaskButton);
   
-    const activeLabel = c.heading("Active", 2, "task-section-header");
+    const activeLabel = c.heading("All", 2, "task-section-header");
     activeTaskList.append(activeLabel);
   
     taskMasterSection.append(activeTaskList, addForm, completedTasksList);  

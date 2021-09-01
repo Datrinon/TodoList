@@ -3,10 +3,30 @@
   border: 1px solid cyan;
 }
 
+.task-section-header {
+  font-size: 2.5em;
+  font-weight: bolder;
+}
+
+#display-ask-form-button {
+  all: unset;
+  margin-left: 15px;
+  padding: 5px;
+  font-size: 1.25rem;
+}
+
+#display-ask-form-button > svg {
+  padding: 0 15px;
+}
+
+#display-ask-form-button:hover {
+  text-shadow: var(--text-shadow-1);
+}
+
 #add-task-form {
   width: 88%;
   position: relative;
-  left: 15px;
+  left: 40px;
 }
 
 #add-task-form, #edit-task-form {
@@ -76,7 +96,7 @@ form > [class^="container-task"] > *{
 }
 
 .task.draggable {
-  width: 50vw;
+  width: 90vw;
   max-width: 800px;
   display: grid;
   grid-template-columns: 5% 60% 35%;
