@@ -98,24 +98,35 @@ class TodoListStorage {
     console.log("Sorting");
 
     this.#storage.sort((a, b) => {
-      a = a.dueDate;
-      b = b.dueDate;
-      if (a === "") {
-        a = "1970-01-01"; 
+      if (a.dueDate === "" && b.dueDate === "") {
+        if (a.title > b.title) {
+          return 1;
+        } else {
+          return -1;
+        }
       }
-      if (b === "") {
-        b = "1970-01-01";
+      if (a.dueDate === "") {
+        return 1; // sort b before a
+      }
+      if (b.dueDate === "") {
+        return -1; // sort a before b
       }
       
-      let aMs = getUnixTime(parseISO(a));
-      let bMs = getUnixTime(parseISO(b));
+      let aMs = getUnixTime(parseISO(a.dueDate));
+      let bMs = getUnixTime(parseISO(b.dueDate));
 
       if (aMs > bMs) {
-        return -1;
-      } else {
         return 1;
+      } else if (aMs < bMs) {
+        return -1;
+      } else { // both are the same date
+        if (a.title > b.title) {
+          return 1;
+        } else {
+          return -1;
+        }
       }
-    })
+    });
     console.log(this.#storage);
   }
 }

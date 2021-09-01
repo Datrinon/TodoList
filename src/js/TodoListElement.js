@@ -382,10 +382,11 @@ export class TodoListElement {
 
 
     generalInfo.append(header, dueDate);
-    expandedInfo.append(categories, priority, description, createDate);
+    expandedInfo.append(description, categories, priority, createDate);
     expandButton.append(expandIcon);
     
     expandButton.addEventListener("click", (e) => {
+      e.currentTarget.querySelector("svg").classList.toggle("point-down");
       let task = e.currentTarget;
       while (!task.id.includes("task-")) {
         task = task.parentNode;

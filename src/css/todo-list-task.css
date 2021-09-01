@@ -66,7 +66,21 @@ form #update-task-submit {
 .expand-task-button {
   all: unset;
   color: white;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s;
   /* TODO need some animations on this when you click expand. */
+}
+
+.expand-task-button:hover::before {
+  position: absolute;
+  content: "Show More";
+  color: white;
+  top: 10px;
+}
+
+.point-down {
+  transform: rotate(0.5turn);
 }
 
 .general-info {
@@ -84,8 +98,8 @@ form #update-task-submit {
   font-style: italic;
 }
 
-.task-view-categories {
-  height: 40px;
+.expanded-info > [class^="task-view"] {
+  margin: 15px 5px;
 }
 
 .category-label {
@@ -95,5 +109,5 @@ form #update-task-submit {
   border-radius: 5px;
   position: relative;
   top: 25%;
-  margin: 0 5px;
 }
+

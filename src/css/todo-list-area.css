@@ -129,6 +129,7 @@ form > [class^="container-task"] > *{
   color: white;
   display: block;
   margin: 0 auto;
+  cursor: move;
 }
 
 .task-information {
@@ -149,6 +150,7 @@ form > [class^="container-task"] > *{
   width: 32%;
   text-align: center;
   position: relative;
+  cursor: pointer;
   /* top: 25%; */
 }
 
