@@ -390,6 +390,8 @@ export class TodoListElement {
       TodoListElement._addControlsToTaskView(taskControlArea);
       TodoListElement._addDragControlToTaskView(taskView, taskDragArea);
       TodoListElement._applyTaskViewHoverFX(taskView);
+    } else {
+      taskView.classList.add("completed");
     }
 
     document.querySelector(parentSelector).append(taskView);
