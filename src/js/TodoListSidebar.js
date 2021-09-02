@@ -150,7 +150,8 @@ class TodoListSidebar {
    * link.
    */
   #getCategoriesAsLinks() {
-    let categories = connection.getAllItems().reduce((cats, task) => {
+    let categories = connection.getAllItems().filter(task => task.completed === false);
+    categories = categories.reduce((cats, task) => {
       // guard clause since continue doesn't work; after all, it is a function, not a loop block.
       if (task.categories.length === 0) {
         return cats;
