@@ -347,8 +347,26 @@ export class TodoListElement {
     let taskDragArea = c.div("task-move");
     let taskControlArea = c.div("task-controls");
 
-    // Information Section Begin
     taskView.id = "task-" + task.id;
+
+    TodoListElement._addInformationToTaskView(taskInformationArea, task, taskView);
+    // Information Section End
+
+    taskView.append(taskDragArea, taskInformationArea, taskControlArea);
+
+    if (!task.completed) {
+      TodoListElement._addControlsToTaskView(taskControlArea);
+      TodoListElement._addDragControlToTaskView(taskView, taskDragArea);
+      TodoListElement._applyTaskViewHoverFX(taskView);
+    } else {
+      taskView.classList.add("completed");
+    }
+
+    document.querySelector(parentSelector).append(taskView);
+  }
+
+  static _addInformationToTaskView(taskInformationArea, task, taskView) {
+    // Information Section Begin
     let header = c.heading(task.title, 2, "task-view-title");
     let createDate = c.paragraph(format(task.id, "'Added' MM/dd/yyyy"), "task-view-create-date"); //c.paragraph();
 
@@ -382,19 +400,6 @@ export class TodoListElement {
     })
 
     taskInformationArea.append(generalInfo, expandedInfo, expandButton);
-    // Information Section End
-
-    taskView.append(taskDragArea, taskInformationArea, taskControlArea);
-
-    if (!task.completed) {
-      TodoListElement._addControlsToTaskView(taskControlArea);
-      TodoListElement._addDragControlToTaskView(taskView, taskDragArea);
-      TodoListElement._applyTaskViewHoverFX(taskView);
-    } else {
-      taskView.classList.add("completed");
-    }
-
-    document.querySelector(parentSelector).append(taskView);
   }
 
   static _addControlsToTaskView(taskControlArea) {
