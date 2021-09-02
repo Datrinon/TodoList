@@ -94,6 +94,7 @@ form #update-task-submit {
 
 .task-view-title {
   font-size: 1.25em;
+  font-weight: 500;
 }
 
 .task-view-due-date {
@@ -124,7 +125,14 @@ form #update-task-submit {
 }
 
 .task-view-description {
-  font-size: 115%;
+  font-size: 100%;
+  border-bottom: 1px dotted rgba(255,255,255,0.5);
+  margin: 5px 5px;
+  padding: 10px 0;
+}
+
+.task-view-categories > * {
+  font-size: 90%;
 }
 
 .task-information > * {
@@ -137,4 +145,8 @@ form #update-task-submit {
 
 .overdue .task-view-due-date {
   color: red;
+}
+
+.task.completed .task-view-due-date {
+  display: none;
 }

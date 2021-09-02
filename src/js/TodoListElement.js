@@ -1,7 +1,7 @@
 import Tagify from '@yaireo/tagify';
 import { compareAsc, format, isPast,
   isSameDay, nextSunday, getMonth,
-  formatRelative, parseISO, subDays, isToday} from 'date-fns'
+  startOfWeek, parseISO, isToday, compareDesc} from 'date-fns'
 import {Component} from "./component.js";
 import {Task} from "./task.js";
 import priority from "./priority.js";
@@ -360,6 +360,7 @@ export class TodoListElement {
       TodoListElement._applyTaskViewHoverFX(taskView);
     } else {
       taskView.classList.add("completed");
+      taskView.classList.remove("overdue"); // a completed task cannot be overdue.
     }
 
     document.querySelector(parentSelector).append(taskView);
@@ -611,7 +612,7 @@ export class TodoListElement {
       case "date":
         if (filterName === "today") {
           condition = (elem) => {
-            return (elem.dueDate !== "" && isToday(parseISO(elem.dueDate)));
+            return (elem.dueDate !== "" && isToday(elem.dueDate));
           };
         } else if (filterName === "week") {
           condition = (elem) => {
@@ -619,14 +620,16 @@ export class TodoListElement {
               return false;
             }
             let today = new Date();
-            return (compareAsc(nextSunday(today), parseISO(elem.dueDate)) === 1)
+            // start of week must come before due date (-1), and end of week comes after (1)
+            return (compareAsc(startOfWeek(today), elem.dueDate) === -1 &&
+                compareAsc(nextSunday(today), elem.dueDate) === 1)
           };
         } else if (filterName === "month") {
           condition = (elem) => {
             if (elem.dueDate === "") {
               return false;
             }
-            return getMonth(new Date()) === getMonth(parseISO(elem.dueDate));
+            return getMonth(new Date()) === getMonth(elem.dueDate);
           };
         }
         break;
