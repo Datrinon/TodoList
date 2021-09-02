@@ -154,10 +154,11 @@ export class Component {
     footer.classList.add("footer");
 
     let text = `Created in ${createMonth} 2021. Odin Project x Dan T.`;
-    let githubElem = document.createElement("a", "footer-github-icon");
+    let githubElem = document.createElement("a");
     let ghIcon = this.faIcon("fab", "fa-github-square", "icon");
 
     githubElem.append(ghIcon);
+    githubElem.classList.add("footer-github-icon");
     githubElem.setAttribute("href", githubLink);
     githubElem.setAttribute("target", "_blank");
     githubElem.style.display = "inline-block";
