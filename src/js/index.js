@@ -94,7 +94,7 @@ const c = new Component();
     document.querySelector("#menu-toggle-button").addEventListener("click",
         TodoListSidebar.toggleSidebar);
   
-    sidebarManager.mql = 700;
+    sidebarManager.mql = 1065;
   
     TodoListSidebar.queryPageWidth(sidebarManager.mql);
   

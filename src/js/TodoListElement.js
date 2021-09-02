@@ -463,7 +463,6 @@ export class TodoListElement {
       while (!taskView.id.includes("task-")) {
         taskView = taskView.parentNode;
       }
-      console.log("hovering over a task...");
       taskView.querySelectorAll(buttonsSelector).forEach(btn => {
         btn.classList.remove("low-opacity");
       });

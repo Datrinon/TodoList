@@ -117,6 +117,7 @@ class TodoListSidebar {
 
   static queryPageWidth(e) {
     if (e.matches) {
+      console.log("Sidebar: Sidebar toggling from query page...");
       document.querySelector(".sidebar").classList.add("hide-sidebar");
       document.querySelector(".sidebar-wrapper").classList.remove("sidebar-active-wrapper-bg");
     } else {

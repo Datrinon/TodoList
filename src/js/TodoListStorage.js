@@ -124,7 +124,7 @@ class TodoListStorage {
         }
       }
     });
-    console.log(this.#storage);
+    // console.log(this.#storage);
   }
 }
 

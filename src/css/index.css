@@ -6,8 +6,9 @@
 }
 
 :root {
+  --selected-category: rgb(20,20,20);
   --primary-background-color: rgb(50,50,50);
-  --secondary-background-color: rgb(64,64,64);
+  --secondary-background-color: rgba(64,64,64, 0.8);
   --tertiary-background-color: rgb(80,80,80);
   --text-shadow-1: rgb(157, 157, 157) 1px 0 10px;
   --invisible: rgba(0,0,0,0);
@@ -65,8 +66,7 @@ body {
 .today-date::before {
   content: "Today is ";
   font-size: 50%;
-  padding: 0 10px;
-  font-style: italic;
+  padding: 0 5px;
 }
 
 @keyframes slidein-left {
@@ -135,16 +135,6 @@ body {
   top: 0;
 }
 
-.task {
-  border: 1px solid rgba(0, 0, 0, 0);
-  /* animation: pop-up 0.6s ease; */
-}
-
-
-
-.task:hover {
-}
-
 .add-tasks-delete-dialog {
   position: relative;
   top: 25%;
@@ -159,20 +149,20 @@ body {
   color: black;
 }
 
-.task>div {
-}
 
 .main {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  min-height: 90vh;
+  height: 95%;
+  overflow-y: auto;
+  background: url("../image/ocean-bg.jpg") no-repeat center center fixed;
+  background-size: cover;
 }
 
 .sidebar {
-  border: 1px solid red;
   height: 100%;
-  width: 300px;
+  width: 230px;
   max-width: 300px;
   transition: max-width 0.5s !important;
   background-color: var(--secondary-background-color);
@@ -229,11 +219,13 @@ ul#category-links > li:active {
 
 .sidebar-selected {
   color: orange;
-  background-color: var(--primary-background-color);
+  background-color: var(--selected-category);
 }
 
 .footer {
   text-align: center;
+  background-color: var(--selected-category);
+  padding: 10px;
 }
 
 .modal-dialog {
@@ -253,7 +245,7 @@ ul#category-links > li:active {
   border-radius: 5px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1060px) {
   /* Apply new style of sidebar */
   /* One, in which, the sidebar overlays the tasks. */
   /* Is that even a flex display anymore? */
@@ -263,7 +255,7 @@ ul#category-links > li:active {
   }
   .sidebar {
     position: fixed;
-    z-index: 2;
+    z-index: 3;
     height: 90vh;
     width: 100vw;
   }
@@ -272,5 +264,6 @@ ul#category-links > li:active {
     height: 90vh;
     position: fixed;
     background-color: rgba(0, 0, 0, 0.7);
+    z-index: 2;
   }
 }

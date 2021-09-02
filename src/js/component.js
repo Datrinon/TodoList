@@ -154,6 +154,11 @@ export class Component {
     footer.classList.add("footer");
 
     let text = "Created in August 2021. Odin Project x Dan T.";
+    let githubLink = document.createElement("a");
+    let ghIcon = this.faIcon("fab", "fa-github-square", "footer-icon");
+
+    githubLink.
+
     let p = document.createElement("p");
 
     p.textContent = text;
