@@ -21,7 +21,7 @@ export class Component {
    * The default structure looks like [ Logo | | | | Navigation Links]
    * @returns - An array containing references to the generated header, main, and footer.
    */
-  initializeStructure(headerTitle, emptyHeader = false) {
+  initializeStructure(headerTitle, emptyHeader = false, createMonth, githubLink) {
     const body = document.body;
     const mainWrapper = this.div("content");
     let header;
@@ -33,7 +33,7 @@ export class Component {
     header.id = "header";
 
     const main = document.createElement("main");
-    const footer = this.footer();
+    const footer = this.footer(createMonth, githubLink);
     main.classList.add("main");
 
     mainWrapper.append(header, main);
@@ -149,19 +149,23 @@ export class Component {
     return bannerContainer;
   }
 
-  footer() {
+  footer(createMonth, githubLink) {
     let footer = document.createElement("footer");
     footer.classList.add("footer");
 
-    let text = "Created in August 2021. Odin Project x Dan T.";
-    let githubLink = document.createElement("a");
-    let ghIcon = this.faIcon("fab", "fa-github-square", "footer-icon");
+    let text = `Created in ${createMonth} 2021. Odin Project x Dan T.`;
+    let githubElem = document.createElement("a", "footer-github-icon");
+    let ghIcon = this.faIcon("fab", "fa-github-square", "icon");
 
-    githubLink.
+    githubElem.append(ghIcon);
+    githubElem.setAttribute("href", githubLink);
+    githubElem.setAttribute("target", "_blank");
+    githubElem.style.display = "inline-block";
 
     let p = document.createElement("p");
 
     p.textContent = text;
+    p.append(githubElem);
     footer.append(p);
 
     return footer;

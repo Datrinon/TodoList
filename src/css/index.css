@@ -225,7 +225,7 @@ ul#category-links > li:active {
 .footer {
   text-align: center;
   background-color: var(--selected-category);
-  padding: 10px;
+  padding: 5px;
 }
 
 .modal-dialog {
@@ -266,4 +266,11 @@ ul#category-links > li:active {
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 2;
   }
+}
+
+.footer-github-icon {
+  display: inline;
+  font-size: 1.5em;
+  color: white;
+  padding-left: 10px;
 }

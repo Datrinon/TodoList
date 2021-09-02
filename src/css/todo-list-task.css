@@ -131,3 +131,11 @@ form #update-task-submit {
 .task-information > * {
   margin: 0 5px;
 }
+
+.overdue {
+  background-color: rgb(59 22 22 / 46%) !important;
+}
+
+.overdue .task-view-due-date {
+  color: red;
+}

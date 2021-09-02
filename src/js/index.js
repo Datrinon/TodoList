@@ -101,7 +101,8 @@ const c = new Component();
     sidebarManager.mql.addEventListener("change",  TodoListSidebar.queryPageWidth);
   }
 
-  let [header, main, footer] = [...c.initializeStructure("To-Do List", true)];
+  let [header, main, footer] = [...c.initializeStructure("To-Do List", true,
+      "August", "https://github.com/Datrinon/TodoList")];
 
   // header elements
   header = loadHeader(header);

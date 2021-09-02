@@ -239,17 +239,20 @@ export class TodoListElement {
     let dueDate;
     let dueDateMsg;
     if (task.dueDate === "") {
-      dueDateMsg = "No due date.";
+      dueDateMsg = "No Due Date";
     } else {
       if (typeof task.dueDate === 'string') {
         task.dueDate = parseISO(task.dueDate);
       }
       dueDateMsg = "Due " + format(task.dueDate, 'P');
-      if (!isSameDay(parseISO(task.dueDate), new Date()) && isPast(parseISO(task.dueDate))) {
+      if (!isSameDay((task.dueDate), new Date()) && isPast(task.dueDate)) {
         taskView.classList.add("overdue");
-        dueDateMsg += " (Overdue)";
+        dueDateMsg = "(Overdue) " + dueDateMsg;
+      } else {
+        taskView.classList.remove("overdue");
       }
     }
+
     taskView.querySelector(".task-view-due-date").textContent = dueDateMsg;
 
     let categories = taskView.querySelector(".task-view-categories");
@@ -341,9 +344,6 @@ export class TodoListElement {
     let taskDragArea = c.div("task-move");
     let taskControlArea = c.div("task-controls");
 
-    //TODO
-    // Refactor this into methods -- populateTaskInformation, populate TaskControls, taskApplyDrag
-
     // Information Section Begin
     taskView.id = "task-" + task.id;
     let header = c.heading(task.title, 2, "task-view-title");
@@ -358,9 +358,11 @@ export class TodoListElement {
         task.dueDate = parseISO(task.dueDate);
       }
       dueDateMsg = "Due " + format(task.dueDate, 'P');
-      if (!isSameDay(parseISO(task.dueDate), new Date()) && isPast(parseISO(task.dueDate))) {
+      if (!isSameDay((task.dueDate), new Date()) && isPast(task.dueDate)) {
         taskView.classList.add("overdue");
         dueDateMsg = "(Overdue) " + dueDateMsg;
+      } else {
+        taskView.classList.remove("overdue");
       }
     }
 
