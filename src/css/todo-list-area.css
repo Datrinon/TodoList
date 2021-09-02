@@ -1,13 +1,12 @@
 #tasks-area {
   margin: 0 auto;
-  border: 1px solid cyan;
 }
 
 .task-section-header {
   font-size: 2.5em;
   font-weight: 500;
-  text-align: center;
   text-transform: uppercase;
+  margin: 0 5%;
   animation: pop-up 0.6s ease;
 }
 
@@ -114,7 +113,7 @@ form > [class^="container-task"] > *{
   width: 90vw;
   max-width: 800px;
   display: grid;
-  grid-template-columns: 5% 60% 35%;
+  grid-template-columns: 3% 75% 22%;
   grid-template-rows: repeat(2, auto);
 }
 
@@ -142,16 +141,34 @@ form > [class^="container-task"] > *{
 .task-controls {
   grid-row: 1 / 2;
   grid-column: 3 / 4;
+  display: flex;
+  justify-content: space-around;
+  align-items: start;
 }
 
 .task-controls > button {
   all: unset;
-  border: 1px solid white;
-  width: 32%;
+  width: 30%;
   text-align: center;
   position: relative;
   cursor: pointer;
-  /* top: 25%; */
+  animation: 0.3s pop-up ease-in;
+  font-variant: all-small-caps;
+}
+
+.task-controls > button:hover {
+  text-shadow: rgb(255, 186, 36) 1px 0 15px;
+}
+
+@keyframes pop-up {
+  0% {
+    transform: translateX(-20px) scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .task-controls > button svg {

@@ -215,6 +215,9 @@ export class TodoListElement {
     connection.update(task);
     TodoListElement._updateTaskOnView(task);
 
+    document.querySelectorAll("#category-links > *").forEach(link => {
+      link.remove();
+    });
     sidebar.updateCategorySidebarListing();
   }
 
@@ -224,28 +227,30 @@ export class TodoListElement {
     taskView.querySelector(".task-view-title").textContent = task.title;
 
 
-    let priorityStars = "";
-    for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
-      priorityStars += "★";
-    }
-    taskView.querySelector(".task-view-priority").textContent = priorityStars;
+    // let priorityStars = "";
+    // for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
+    //   priorityStars += "★";
+    // }
+    taskView.querySelector(".task-view-priority").textContent = task.priority;
 
     taskView.querySelector(".task-view-description").textContent = task.description;
-    taskView.querySelector(".task-view-create-date").textContent = format(task.id, "'Added' MM/dd/yyyy");
+    // taskView.querySelector(".task-view-create-date").textContent = format(task.id, "'Added' PP");
 
     let dueDate;
     let dueDateMsg;
     if (task.dueDate === "") {
-      dueDateMsg = "No due date set.";
+      dueDateMsg = "No due date.";
     } else {
-      dueDateMsg = "Due " + format(parseISO(task.dueDate), 'MMM. do, yyyy');
+      if (typeof task.dueDate === 'string') {
+        task.dueDate = parseISO(task.dueDate);
+      }
+      dueDateMsg = "Due " + format(task.dueDate, 'P');
       if (!isSameDay(parseISO(task.dueDate), new Date()) && isPast(parseISO(task.dueDate))) {
         taskView.classList.add("overdue");
         dueDateMsg += " (Overdue)";
       }
     }
-
-    dueDate = c.paragraph(dueDateMsg, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
+    taskView.querySelector(".task-view-due-date").textContent = dueDateMsg;
 
     let categories = taskView.querySelector(".task-view-categories");
     categories.textContent = "";
@@ -277,6 +282,9 @@ export class TodoListElement {
     
     TodoListElement.connection.add(task);
 
+    document.querySelectorAll("#category-links > *").forEach(link => {
+      link.remove();
+    });
     sidebar.updateCategorySidebarListing();
   }
 
@@ -344,23 +352,26 @@ export class TodoListElement {
     let dueDate;
     let dueDateMsg;
     if (task.dueDate === "") {
-      dueDateMsg = "No due date set.";
+      dueDateMsg = "No Due Date";
     } else {
-      dueDateMsg = "Due " + format(parseISO(task.dueDate), 'MMM. do, yyyy');
+      if (typeof task.dueDate === 'string') {
+        task.dueDate = parseISO(task.dueDate);
+      }
+      dueDateMsg = "Due " + format(task.dueDate, 'P');
       if (!isSameDay(parseISO(task.dueDate), new Date()) && isPast(parseISO(task.dueDate))) {
         taskView.classList.add("overdue");
-        dueDateMsg += " (Overdue)";
+        dueDateMsg = "(Overdue) " + dueDateMsg;
       }
     }
 
     dueDate = c.paragraph(dueDateMsg, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
 
-    let priorityStars = "";
+    // let priorityStars = "";
+    // for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
+      //   priorityStars += "★";
+      // }
     let priority = c.paragraph("", "task-view-priority");
-    for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
-      priorityStars += "★";
-    }
-    priority.textContent = priorityStars;
+    priority.textContent = task.priority;
 
     let description = c.paragraph(task.description, "task-view-description");
     let categories = c.div("task-view-categories");
@@ -425,11 +436,6 @@ export class TodoListElement {
 
     taskDragArea.append(dragButton);
 
-//    // if (task.completed) {
-  //  //   taskDragArea.firstChild.remove();
-    ////   taskView.append(taskDragArea, taskInformationArea);
-    ////   document.querySelector("#tasks-completed").append(taskView);
-  //// } else {
     taskView.append(taskDragArea, taskInformationArea, taskControlArea);
 
     document.querySelector(parentSelector).append(taskView);
@@ -444,9 +450,35 @@ export class TodoListElement {
 
     taskView.classList.add("draggable");
     TodoListElement._applyDragCapabilities();
-    //// }
-
+    
+    let buttonsSelector = ".task-move > button, .task-controls > button";
+    // Default state, all buttons are low opacity.
+    taskView.querySelectorAll(buttonsSelector).forEach(btn => {
+      btn.classList.add("low-opacity");
+    });
+    
+    // Apply hover capabilities, and that's when buttons are shown.
+    taskView.onmouseover = (e) => {
+      let taskView = e.currentTarget;
+      while (!taskView.id.includes("task-")) {
+        taskView = taskView.parentNode;
+      }
+      console.log("hovering over a task...");
+      taskView.querySelectorAll(buttonsSelector).forEach(btn => {
+        btn.classList.remove("low-opacity");
+      });
+    }
+    taskView.onmouseout = (e) => {
+      let taskView = e.currentTarget;
+      while (!taskView.id.includes("task-")) {
+        taskView = taskView.parentNode;
+      }
+      taskView.querySelectorAll(buttonsSelector).forEach(btn => {
+        btn.classList.add("low-opacity");
+      });
+    }
   }
+
 
   static _applyDragCapabilities() {
     let draggables = document.querySelectorAll(".draggable");
@@ -531,13 +563,8 @@ export class TodoListElement {
     TodoListElement.connection.update(task);
     
     // Remove the finish button from taskview
-    taskView.querySelector(".task-view-finish-button").remove();
-
-    // Add the task to the completed view.
-    // I know that append will not duplicate elements since
-    // "if the given child is a reference to an existing node in the document,
-    // appendChild() moves it from its current position to the new position."
-    document.querySelector("#tasks-completed").append(taskView);
+    // taskView.querySelector(".task-view-finish-button").remove();
+    taskView.remove();
   }
 
   static _deleteTask(e) {

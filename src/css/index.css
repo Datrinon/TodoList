@@ -23,6 +23,11 @@ body {
   display: none !important;
 }
 
+.low-opacity {
+  opacity: 0.1 !important;
+  transition: opacity 0.3s;
+}
+
 #header {
   border-bottom: 1px solid black;
   display: flex;
@@ -32,7 +37,11 @@ body {
   justify-content: space-between;
   align-items: center;
   font-family: "FreeSans", "Spartan";
-  font-size: 2.5em;
+  font-size: 3.0em;
+}
+
+.page-title {
+  font-family: "Spartan";
 }
 
 .logo-menu>* {
@@ -49,8 +58,8 @@ body {
 
 .today-date {
   padding: 0 60px;
-  font-variant: all-small-caps;
   animation: slidein-left 2s ease-out;
+  font-size: 1.85rem;
 }
 
 .today-date::before {
@@ -69,7 +78,7 @@ body {
 
 #navbar {
   padding: 0 25px;
-  font-size: 1.15rem;
+  font-size: 1.5rem;
   font-variant: all-petite-caps;
   text-shadow: var(--invisible) 1px 0 10px;
 }
@@ -128,22 +137,12 @@ body {
 
 .task {
   border: 1px solid rgba(0, 0, 0, 0);
-  animation: pop-up 0.6s ease;
+  /* animation: pop-up 0.6s ease; */
 }
 
-@keyframes pop-up {
-  0% {
-    transform: translateX(-20px) scale(0.6);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
+
 
 .task:hover {
-  border: 1px solid blue;
 }
 
 .add-tasks-delete-dialog {
@@ -161,7 +160,6 @@ body {
 }
 
 .task>div {
-  border: 1px solid black;
 }
 
 .main {
@@ -236,6 +234,23 @@ ul#category-links > li:active {
 
 .footer {
   text-align: center;
+}
+
+.modal-dialog {
+  padding: 5%;
+}
+
+.modal-button-area {
+  text-align: right;
+}
+
+.modal-button-area button {
+  font-family: inherit;
+  padding: 5px 10px;
+  margin: 0 5px;
+  font-weight: bold;
+  background-color: white;
+  border-radius: 5px;
 }
 
 @media (max-width: 700px) {

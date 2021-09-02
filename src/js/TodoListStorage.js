@@ -92,10 +92,7 @@ class TodoListStorage {
     return array;
   }
 
-  sortByDueDate() {
-    
-    console.log(this.#storage);
-    console.log("Sorting");
+  sortByDueDate() {  
 
     this.#storage.sort((a, b) => {
       if (a.dueDate === "" && b.dueDate === "") {

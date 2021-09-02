@@ -50,12 +50,12 @@ const c = new Component();
     pageLogo = c.heading("To-Do List", 1, "page-title");
     todayDate = c.paragraph(`${format(new Date(), "PP")}`, "today-date");
 
-    logoMenuDiv.append(menuButton, pageLogo, todayDate);
+    logoMenuDiv.append(menuButton, pageLogo);
 
     
     navBar = c.navbar("My Account");
   
-    header.append(logoMenuDiv, navBar);
+    header.append(logoMenuDiv, todayDate, navBar);
   
     return header;
   }
@@ -65,7 +65,6 @@ const c = new Component();
     const taskMasterSection = c.section("tasks-area");
     const activeTaskList = c.section("tasks-active");
     const addForm = c.section("tasks-add");
-    const completedTasksList = c.section("tasks-completed");
     const addTaskButton = TodoListElement.addTaskButton();
   
     addForm.append(addTaskButton);
@@ -73,7 +72,7 @@ const c = new Component();
     const activeLabel = c.heading("All", 2, "task-section-header");
     activeTaskList.append(activeLabel);
   
-    taskMasterSection.append(activeTaskList, addForm, completedTasksList);  
+    taskMasterSection.append(activeTaskList, addForm);  
   
     main.append(sidebar.getSidebar(), taskMasterSection);
   

@@ -177,7 +177,6 @@ class TodoListSidebar {
       catLink.textContent = cat.replace("-", ' ');
       catLink.textContent += ` (${categories[cat]})`;
   
-      //TODO
       // Add filter tasks callback over here.
       catLink.classList.add("category-nav-link");
       catLink.addEventListener("click", (e) => {
