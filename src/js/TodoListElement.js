@@ -225,18 +225,42 @@ export class TodoListElement {
     let taskView = document.querySelector(`#task-${task.id}`);
 
     taskView.querySelector(".task-view-title").textContent = task.title;
-
-
-    // let priorityStars = "";
-    // for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
-    //   priorityStars += "★";
-    // }
     taskView.querySelector(".task-view-priority").textContent = task.priority;
-
     taskView.querySelector(".task-view-description").textContent = task.description;
-    // taskView.querySelector(".task-view-create-date").textContent = format(task.id, "'Added' PP");
 
-    let dueDate;
+    taskView.querySelector(".task-view-due-date").textContent =
+        TodoListElement._getDateTextForTask(task, taskView);
+
+    let categories = taskView.querySelector(".task-view-categories");
+    TodoListElement._addCategoryViewToTaskView(categories, task);
+
+    c.toast("Task updated successfully", 3);
+    console.log("Task updated successfully.");
+    // remove the form after we've finished using it.
+    taskView.querySelector("#edit-task-form").remove();
+  }
+
+  static _addCategoryViewToTaskView(categoryDiv, task) {
+    categoryDiv.textContent = "";
+    if (task.categories.length !== 0){
+      task.categories.forEach(elem => {
+        let span = c.span(elem.value, "category-label");
+        categoryDiv.append(span);
+      });
+    } else {
+      categoryDiv.append(c.paragraph("No categories set."));
+    }
+  }
+
+  /**
+   * Takes a given task's date and uses it to create text for an element.
+   * Will mark as overdue if the date is past the current day, or mark 
+   * no due date if the task does not have a due date, hence it needing a 
+   * reference to the task view.
+   * 
+   * @returns date
+   */
+  static _getDateTextForTask(task, taskView) {
     let dueDateMsg;
     if (task.dueDate === "") {
       dueDateMsg = "No Due Date";
@@ -252,24 +276,7 @@ export class TodoListElement {
         taskView.classList.remove("overdue");
       }
     }
-
-    taskView.querySelector(".task-view-due-date").textContent = dueDateMsg;
-
-    let categories = taskView.querySelector(".task-view-categories");
-    categories.textContent = "";
-    if (task.categories.length !== 0){
-      task.categories.forEach(elem => {
-        let span = c.span(elem.value, "category-label");
-        categories.append(span);
-      });
-    } else {
-      categories.append(c.paragraph("No categories set."));
-    }
-
-    c.toast("Task updated successfully", 3);
-    console.log("Task updated successfully.");
-    // remove the form after we've finished using it.
-    taskView.querySelector("#edit-task-form").remove();
+    return dueDateMsg;
   }
 
   static _handleAddTask() {
@@ -325,10 +332,6 @@ export class TodoListElement {
     if (id === "add-task-form") {
       document.querySelector("#display-ask-form-button").classList.remove("no-display");
     }
-    // TODO
-    // display the task again too.
-      // document.querySelector(".form-active-task-disable-display")
-      //     .classList.remove("form-active-task-disable-display");
   }
 
   /**
@@ -349,50 +352,21 @@ export class TodoListElement {
     let header = c.heading(task.title, 2, "task-view-title");
     let createDate = c.paragraph(format(task.id, "'Added' MM/dd/yyyy"), "task-view-create-date"); //c.paragraph();
 
-    let dueDate;
-    let dueDateMsg;
-    if (task.dueDate === "") {
-      dueDateMsg = "No Due Date";
-    } else {
-      if (typeof task.dueDate === 'string') {
-        task.dueDate = parseISO(task.dueDate);
-      }
-      dueDateMsg = "Due " + format(task.dueDate, 'P');
-      if (!isSameDay((task.dueDate), new Date()) && isPast(task.dueDate)) {
-        taskView.classList.add("overdue");
-        dueDateMsg = "(Overdue) " + dueDateMsg;
-      } else {
-        taskView.classList.remove("overdue");
-      }
-    }
+    let dueDate = c.paragraph("", "task-view-due-date");
+    
+    dueDate.textContent = TodoListElement._getDateTextForTask(task, taskView);
 
-    dueDate = c.paragraph(dueDateMsg, "task-view-due-date"); //format(task.dueDate, "'Due' MM/dd/yyyy"), "task-view-due-date");
-
-    // let priorityStars = "";
-    // for (let i = 0; i < TodoListElement.p[task.priority]; i++) {
-      //   priorityStars += "★";
-      // }
     let priority = c.paragraph("", "task-view-priority");
     priority.textContent = task.priority;
 
     let description = c.paragraph(task.description, "task-view-description");
     let categories = c.div("task-view-categories");
-    if (task.categories.length !== 0){
-      task.categories.forEach(elem => {
-        let span = c.span(elem.value, "category-label");
-        categories.append(span);
-      });
-    } else {
-      categories.append(c.paragraph("No categories set."));
-    }
-
-    //taskInformationArea.append(header, dueDate, categories, priority, description, createDate);
+    TodoListElement._addCategoryViewToTaskView(categories, task);
 
     let generalInfo = c.div("general-info");
     let expandedInfo = c.div("expanded-info", "no-display");
     let expandButton = c.button("", "expand-task-button");
     let expandIcon = c.faIcon("fas", "fa-chevron-down");
-
 
     generalInfo.append(header, dueDate);
     expandedInfo.append(description, categories, priority, createDate);

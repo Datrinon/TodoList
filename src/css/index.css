@@ -149,13 +149,12 @@ body {
   color: black;
 }
 
-
 .main {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   height: 95%;
-  overflow-y: auto;
+  overflow-y: none;
   background: url("../image/ocean-bg.jpg") no-repeat center center fixed;
   background-size: cover;
 }
