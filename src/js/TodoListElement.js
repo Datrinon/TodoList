@@ -384,8 +384,18 @@ export class TodoListElement {
     taskInformationArea.append(generalInfo, expandedInfo, expandButton);
     // Information Section End
 
-    // Controls Section Begin
+    taskView.append(taskDragArea, taskInformationArea, taskControlArea);
 
+    if (!task.completed) {
+      TodoListElement._addControlsToTaskView(taskControlArea);
+      TodoListElement._addDragControlToTaskView(taskView, taskDragArea);
+      TodoListElement._applyTaskViewHoverFX(taskView);
+    }
+
+    document.querySelector(parentSelector).append(taskView);
+  }
+
+  static _addControlsToTaskView(taskControlArea) {
     let finishButton = c.button("", "task-view-finish-button");
     let finishIcon = c.faIcon("fas", "fa-check-square");
     finishButton.append(finishIcon, "Finish");
@@ -398,23 +408,19 @@ export class TodoListElement {
     let deleteIcon = c.faIcon("fas", "fa-trash-alt");
     deleteButton.append(deleteIcon, "Delete");
 
-    taskControlArea.append(finishButton, editButton, deleteButton);
-
-    // Controls Section End
-
     finishButton.addEventListener("click", TodoListElement._completeTask);
     editButton.addEventListener("click", TodoListElement._displayEditTaskForm);
     deleteButton.addEventListener("click", TodoListElement._deleteTask);
 
+    taskControlArea.append(finishButton, editButton, deleteButton);
+  }
+
+  static _addDragControlToTaskView(taskView, taskDragArea) {
     let dragButton = c.button("", "task-view-drag-button");
     let dragIcon = c.faIcon("fas", "fa-grip-vertical");
     dragButton.append(dragIcon);
 
     taskDragArea.append(dragButton);
-
-    taskView.append(taskDragArea, taskInformationArea, taskControlArea);
-
-    document.querySelector(parentSelector).append(taskView);
 
     dragButton.addEventListener("mousedown", () => {
       taskView.setAttribute("draggable", "true");
@@ -426,10 +432,16 @@ export class TodoListElement {
 
     taskView.classList.add("draggable");
     TodoListElement._applyDragCapabilities();
-    
+  }
+
+  /**
+   * Apply hover effects when hovering over the task.
+   */
+  static _applyTaskViewHoverFX(taskView) {
     let buttonsSelector = ".task-move > button, .task-controls > button";
     // Default state, all buttons are low opacity.
     taskView.querySelectorAll(buttonsSelector).forEach(btn => {
+      console.log("adding low opacity");
       btn.classList.add("low-opacity");
     });
     
@@ -453,7 +465,6 @@ export class TodoListElement {
       });
     }
   }
-
 
   static _applyDragCapabilities() {
     let draggables = document.querySelectorAll(".draggable");

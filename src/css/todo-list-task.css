@@ -120,8 +120,7 @@ form #update-task-submit {
 }
 
 .task-view-priority, .task-view-create-date {
-  font-size: 90%;
-  text-align: center;
+  font-size: 75%;
 }
 
 .task-view-description {
