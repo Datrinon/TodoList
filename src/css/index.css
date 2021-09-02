@@ -246,13 +246,7 @@ ul#category-links > li:active {
 }
 
 @media (max-width: 1060px) {
-  /* Apply new style of sidebar */
-  /* One, in which, the sidebar overlays the tasks. */
-  /* Is that even a flex display anymore? */
-  /* > no */
-  .main {
-    display: unset;
-  }
+
   .sidebar {
     position: fixed;
     z-index: 3;
@@ -273,4 +267,16 @@ ul#category-links > li:active {
   font-size: 1.5em;
   color: white;
   padding-left: 10px;
+}
+
+@media (max-width: 872px) {
+  .page-title {
+    display: none;
+  }
+  #header {
+    flex-wrap: nowrap;
+  }
+  .today-date {
+    padding: 0;
+  } 
 }

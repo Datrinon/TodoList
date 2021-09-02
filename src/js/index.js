@@ -50,12 +50,12 @@ const c = new Component();
     pageLogo = c.heading("To-Do List", 1, "page-title");
     todayDate = c.paragraph(`${format(new Date(), "PP")}`, "today-date");
 
-    logoMenuDiv.append(menuButton, pageLogo);
+    logoMenuDiv.append(menuButton, pageLogo, todayDate);
 
     
     navBar = c.navbar("My Account");
   
-    header.append(logoMenuDiv, todayDate, navBar);
+    header.append(logoMenuDiv, navBar);
   
     return header;
   }
