@@ -498,7 +498,7 @@ export class TodoListElement {
       const afterElement = getDragAfterElement(e.clientY);
       const activeDraggable = document.querySelector(".dragging");
       
-      // if afterElement is null, we're at the bottom fo the list
+      // if afterElement is null, we're at the bottom of the list
       if (afterElement === null) {
         container.append(activeDraggable); 
       } else {

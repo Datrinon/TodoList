@@ -109,6 +109,10 @@ form > [class^="container-task"] > *{
   }
 }
 
+section#tasks-active {
+  margin-top: 25px;
+}
+
 .task {
   border: 1px solid rgb(46 46 46 / 92%);
   background-color: rgba(0,0,0,0.3);
@@ -166,7 +170,7 @@ form > [class^="container-task"] > *{
   text-align: center;
   position: relative;
   cursor: pointer;
-  animation: 0.3s pop-up ease-in;
+  /* animation: 0.3s pop-up ease-in; */
   font-variant: all-small-caps;
 }
 
